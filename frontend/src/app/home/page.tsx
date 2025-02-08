@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { ProjectCard } from "./(components)/ProjectCard";
 import { AddProjectCard } from "./(components)/AddProjectCard";
+import { Button } from "@/components/ui/button"
 
 /* Sidebar imports */
 import { AppSidebar } from "@/components/app-sidebar";
@@ -15,7 +16,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { getUser, isAuthenticated, User } from "../utils/auth";
+import { getUser, isAuthenticated, removeToken, User } from "../utils/auth";
 import { useRouter } from "next/navigation";
 
 interface Project {
@@ -85,6 +86,11 @@ export default function HomePage() {
     setProjects([...projects, newProject]);
   };
 
+  const logout = () => {
+    removeToken()
+    router.push('/login')
+  }
+
   if (loading) {
     return <p>Loading...</p>
   }
@@ -98,6 +104,7 @@ export default function HomePage() {
               <h1 className="text-4xl font-bold tracking-tight text-foreground mb-20">
                 Welcome back, {user.firstname}!
               </h1>
+              <Button onClick={logout}>Logout</Button>
             </div>
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
               Analytics Dashboard
