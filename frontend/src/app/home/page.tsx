@@ -79,7 +79,7 @@ export default function HomePage() {
               </h1>
             </div>
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
-              Analytics Dashboard
+              Home
             </h2>
             <p className="text-lg text-muted-foreground">
               Create and manage your data analysis projects
@@ -87,9 +87,9 @@ export default function HomePage() {
           </header>
 
           {/* Cool Image Card */}
-          <div className="w-full h-[400px] rounded-lg overflow-hidden shadow-lg">
+          <div className="w-full h-[420px] rounded-lg overflow-hidden shadow-lg">
             <img
-              src="/images/home-card.png"
+              src="/images/home.png"
               alt="Analytics Dashboard"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
             />
