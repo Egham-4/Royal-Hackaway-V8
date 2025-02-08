@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { ProjectCard } from "./(components)/ProjectCard";
 import { AddProjectCard } from "./(components)/AddProjectCard";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 /* Sidebar imports */
 import { AppSidebar } from "@/components/app-sidebar";
@@ -26,23 +26,6 @@ interface Project {
 }
 
 export default function HomePage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
-  setLoading(false)
-
-  const user: User = getUser()
-  console.log(user)
-
-  //useEffect(() => {
-  //  if (!isAuthenticated()) {
-  //    router.push('/login')
-  //  }
-  //  else {
-  //    setLoading(false)
-  //  }
-  //})
-
-
   const initialProjects = [
     {
       id: 1,
@@ -81,14 +64,6 @@ export default function HomePage() {
     setProjects([...projects, newProject]);
   };
 
-  const logout = () => {
-    removeToken()
-    router.push('/login')
-  }
-
-  if (loading) {
-    return <p>Loading...</p>
-  }
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -97,9 +72,8 @@ export default function HomePage() {
           <header className="space-y-2 text-center sm:text-left">
             <div className="flex items-start justify-center text-center md:justify-start">
               <h1 className="text-4xl font-bold tracking-tight text-foreground mb-20">
-                Welcome back, {user.firstname}!
+                Welcome back, Jack Ma!
               </h1>
-              <Button onClick={logout}>Logout</Button>
             </div>
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
               Home
@@ -119,7 +93,7 @@ export default function HomePage() {
           </div>
 
           {/* Project Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex flex-wrap gap-6 justify-start">
             <AddProjectCard onAdd={handleAddProject} />
             {projects.map((project) => (
               <ProjectCard

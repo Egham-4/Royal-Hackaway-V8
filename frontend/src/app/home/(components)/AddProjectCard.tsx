@@ -11,7 +11,7 @@ interface AddProjectCardProps {
 export function AddProjectCard({ onAdd }: AddProjectCardProps) {
   return (
     <AddProjectDialog onProjectAdd={onAdd}>
-      <Card className="w-[300px] h-[200px] flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-muted/50 transition-colors">
+      <Card className="w-[350px] h-[200px] flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-muted/50 transition-colors">
         <Plus className="h-10 w-10" />
         <span className="font-bold">Create New Project</span>
       </Card>
