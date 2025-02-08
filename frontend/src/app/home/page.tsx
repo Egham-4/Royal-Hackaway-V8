@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ProjectCard } from "./(components)/ProjectCard";
 import { AddProjectCard } from "./(components)/AddProjectCard";
+import { Button } from "@/components/ui/button"
 
 /* Sidebar imports */
 import { AppSidebar } from "@/components/app-sidebar";
@@ -15,6 +16,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { getUser, isAuthenticated, removeToken, User } from "../utils/auth";
+import { useRouter } from "next/navigation";
 
 interface Project {
   id: number;
@@ -23,6 +26,22 @@ interface Project {
 }
 
 export default function HomePage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+
+  const user: User = getUser()
+  console.log(user)
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push('/login')
+    }
+    else {
+      setLoading(false)
+    }
+  })
+
+
   const initialProjects = [
     {
       id: 1,
@@ -67,6 +86,14 @@ export default function HomePage() {
     setProjects([...projects, newProject]);
   };
 
+  const logout = () => {
+    removeToken()
+    router.push('/login')
+  }
+
+  if (loading) {
+    return <p>Loading...</p>
+  }
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -75,8 +102,9 @@ export default function HomePage() {
           <header className="space-y-2 text-center sm:text-left">
             <div className="flex items-start justify-center text-center md:justify-start">
               <h1 className="text-4xl font-bold tracking-tight text-foreground mb-20">
-                Welcome back, User!
+                Welcome back, {user.firstname}!
               </h1>
+              <Button onClick={logout}>Logout</Button>
             </div>
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
               Analytics Dashboard

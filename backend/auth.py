@@ -29,8 +29,15 @@ def login():
     user = User()
     user = user.authenticate_user(email, password)
 
-    access_token = create_access_token(identity=user['email'])
-    return jsonify({"access_token": access_token}), 200
+    if user != None:
+        access_token = create_access_token(identity=user['email'])
+        # remove password from data
+        del user['password']
+        print(user)
+        print(type(user))
+        return jsonify({"access_token": access_token, "user": user}), 200
+
+    return jsonify({"error": "Invalid credentials"}), 401
 
 @bp.route('/test')
 @jwt_required()
