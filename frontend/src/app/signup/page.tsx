@@ -5,17 +5,53 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Icons } from "@/components/icons";
+import { useRouter } from "next/navigation";
+import { AlertCircle } from "lucide-react";
 
 export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('')
+  const router = useRouter()
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+    // send forma data to backend
+    let formData = {
+      firstname: registerform.firstName.value,
+      lastname: registerform.lastname.value,
+      username: registerform.username.value,
+      email: registerform.email.value,
+      phone_number: registerform.phone.value || "",
+      password: registerform.password.value,
+    }
+
+    //let response = await fetch(process.env.API_URL + '/auth/register')
+    let registerUrl = process.env.API_URL + '/auth/register'
+    let response = await fetch(registerUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+
+    })
+
+    let json = await response.json()
+
+    if (response.status == 200) {
+      router.push('/login')
+    }
+
+    if (response.status == 409) {
+      setError(json.error)
+      registerform.reset()
+    }
+
+    // stop loading
+    setIsLoading(false)
   }
 
   return (
@@ -29,28 +65,31 @@ export default function SignUpPage() {
         </div>
 
         <div className="space-y-6">
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form name="registerform" onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
                 placeholder="johndoe"
+                name="username"
                 type="text"
                 autoCapitalize="none"
                 autoComplete="username"
                 autoCorrect="off"
                 disabled={isLoading}
+                required
               />
             </div>
 
             <div className="grid gap-4 grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name</Label>
-                <Input id="firstName" placeholder="John" disabled={isLoading} />
+                <Input name="firstName" id="firstname" placeholder="John" required disabled={isLoading} />
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="lastName">Last Name</Label>
-                <Input id="lastName" placeholder="Doe" disabled={isLoading} />
+                <Input id="lastName" name="lastname" placeholder="Doe" required disabled={isLoading} />
               </div>
             </div>
 
@@ -60,10 +99,12 @@ export default function SignUpPage() {
                 id="email"
                 placeholder="name@example.com"
                 type="email"
+                name="email"
                 autoCapitalize="none"
                 autoComplete="email"
                 autoCorrect="off"
                 disabled={isLoading}
+                required
               />
             </div>
 
@@ -71,6 +112,7 @@ export default function SignUpPage() {
               <Label htmlFor="phone">Phone Number (Optional)</Label>
               <Input
                 id="phone"
+                name="phone"
                 placeholder="+44 0000000000"
                 type="tel"
                 autoComplete="tel"
@@ -82,11 +124,23 @@ export default function SignUpPage() {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 placeholder="Enter your password"
                 type="password"
                 disabled={isLoading}
+                required
               />
             </div>
+
+            {
+              error ?
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert> : null
+            }
+
 
             <Button className="w-full" disabled={isLoading}>
               {isLoading && (

@@ -33,9 +33,9 @@ class User(Collection):
         # check if user is already registered
         print(self.get_user_by_email(email))
         if self.get_user_by_email(email):
-            return {"error": "user already registered"}
+            return {"error": "email already registered"}, 409
         
-        return self.create(user_data)
+        return self.create(user_data), 200
 
     def get_user_by_email(self, email):
         return self.find_by("email", email)
