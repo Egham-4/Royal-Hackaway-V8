@@ -27,8 +27,6 @@ class DataAnalyzerAgent:
     def __init__(self):
         self.llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.1)
         self.graph = self._build_analyser_graph()
-        self._cache = {}
-        logger.info("DataAnalyzerAgent initialized successfully")
 
     def _build_analyser_graph(self) -> StateGraph:
         logger.info("Building DATA ANALYZER graph")
@@ -44,7 +42,7 @@ class DataAnalyzerAgent:
         
         return graph
         
-        r
+        
 
     def data_analyser(self, state: DataAnalyzerState) -> DataAnalyzerState:
         logger.info("Starting data analysis")
