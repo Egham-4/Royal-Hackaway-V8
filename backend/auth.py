@@ -18,7 +18,7 @@ def register():
     user = User()
     response = user.create_user(firstname, lastname, username, password, email, phone_number)
 
-    return jsonify(response)
+    return jsonify(response[0]), response[1]
 
 @bp.route('/login', methods=["POST"])
 def login():
