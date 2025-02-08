@@ -48,12 +48,6 @@ export default function HomePage() {
       description:
         "Compare effectiveness of different booking platforms and optimize distribution channel strategy.",
     },
-    {
-      id: 5,
-      title: "F&B Sales Analysis",
-      description:
-        "Track food and beverage sales patterns to optimize menu offerings and reduce waste.",
-    },
   ];
 
   const [projects, setProjects] = useState<Project[]>(initialProjects);
