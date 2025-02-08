@@ -79,7 +79,7 @@ class DataAnalyzerAgent:
             "data_visualization": result,
         }
 
-    def analyze_repo(self, header: List[str], sample_row: List[Any], 
+    def write_report(self, header: List[str], sample_row: List[Any], 
                     metadata: Dict[str, str], business_type: str) -> Dict[str, Any]:
         logger.info("Starting repository analysis")
         
