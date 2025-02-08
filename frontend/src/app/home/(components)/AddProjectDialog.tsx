@@ -31,7 +31,7 @@ export function AddProjectDialog({ onProjectAdd }: AddProjectDialogProps) {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="fixed bottom-6 right-6 rounded-full w-12 h-12 p-0">
-          <Plus className="h-6 w-6" />
+          <Plus className="h-20 w-20" />
         </Button>
       </DialogTrigger>
       <DialogContent>
