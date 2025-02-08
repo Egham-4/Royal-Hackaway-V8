@@ -1,20 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { AddProjectDialog } from "./(components)/AddProjectDialog";
+
 import { ProjectCard } from "./(components)/ProjectCard";
+import { AddProjectCard } from "./(components)/AddProjectCard";
 
 /* Sidebar imports */
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+
 import { Separator } from "@/components/ui/separator";
+
 import {
   SidebarInset,
   SidebarProvider,
@@ -28,7 +23,40 @@ interface Project {
 }
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const initialProjects = [
+    {
+      id: 1,
+      title: "Occupancy Rate Analysis",
+      description:
+        "Track and forecast room occupancy rates across seasons to optimize pricing and availability.",
+    },
+    {
+      id: 2,
+      title: "Guest Satisfaction Metrics",
+      description:
+        "Analyze guest reviews and feedback to identify key areas of improvement and maintain high service standards.",
+    },
+    {
+      id: 3,
+      title: "Revenue Per Room",
+      description:
+        "Monitor RevPAR trends and identify opportunities to maximize revenue through dynamic pricing strategies.",
+    },
+    {
+      id: 4,
+      title: "Booking Channel Performance",
+      description:
+        "Compare effectiveness of different booking platforms and optimize distribution channel strategy.",
+    },
+    {
+      id: 5,
+      title: "F&B Sales Analysis",
+      description:
+        "Track food and beverage sales patterns to optimize menu offerings and reduce waste.",
+    },
+  ];
+
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
 
   const handleAddProject = (title: string, description: string) => {
     const newProject = {
@@ -58,7 +86,7 @@ export default function ProjectsPage() {
             </p>
           </header>
 
-          {/* Image Card */}
+          {/* Cool Image Card */}
           <div className="w-full h-[400px] rounded-lg overflow-hidden shadow-lg">
             <img
               src="/images/home-card.png"
@@ -67,8 +95,9 @@ export default function ProjectsPage() {
             />
           </div>
 
-          {/* Rest of your content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Project Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <AddProjectCard onAdd={handleAddProject} />
             {projects.map((project) => (
               <ProjectCard
                 key={project.id}
@@ -77,7 +106,6 @@ export default function ProjectsPage() {
               />
             ))}
           </div>
-          <AddProjectDialog onProjectAdd={handleAddProject} />
         </div>
       </SidebarInset>
     </SidebarProvider>
