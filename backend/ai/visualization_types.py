@@ -48,12 +48,12 @@ class AreaChartVisualization(BaseModel):
 
 # Define the main model which contains the generated Python code and the visualization parameters.
 class VisualizationTypes(BaseModel):
-    visualization: Union[
+    visualization: List[Union[
         LineGraphVisualization,
         PieChartVisualization,
         BarChartVisualization,
         ScatterPlotVisualization,
         AreaChartVisualization
-    ] = Field(..., description="Parameters that define how to visualize the data.")
+    ]] = Field(..., description="3 Parameters that define how to visualize the data.")
 
 
