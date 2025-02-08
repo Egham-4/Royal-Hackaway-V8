@@ -79,7 +79,6 @@ class DataAnalyzerAgent:
 
     def analyse_data(self, header: List[str], sample_row: List[Any], 
                     metadata: Dict[str, MetadataField], business_type: str) -> Dict[str, Any]:
-        
         logger.info("Starting repository analysis")
         
         initial_state = {
