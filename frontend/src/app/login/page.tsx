@@ -7,19 +7,50 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/icons";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { saveToken, saveUser } from "../utils/auth";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
   const router = useRouter();
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push("/projects");
-    }, 3000);
+    let formData = {
+      email: loginform.email.value,
+      password: loginform.password.value
+    }
+    let loginUrl = process.env.API_URL + '/auth/login'
+
+    let response = await fetch(loginUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+
+    })
+
+    let json = await response.json()
+
+    if (response.status == 200) {
+      saveToken(json.access_token)
+      saveUser(json.user)
+      router.push("/home");
+    }
+
+    if (response.status == 401) {
+      setError(json.error)
+      loginform.reset()
+    }
+
+    // stop loading
+    setIsLoading(false)
   }
 
   return (
@@ -32,7 +63,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form name="loginform" onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -43,6 +74,7 @@ export default function LoginPage() {
               autoComplete="email"
               autoCorrect="off"
               disabled={isLoading}
+              name="email"
             />
           </div>
           <div className="space-y-2">
@@ -52,8 +84,21 @@ export default function LoginPage() {
               placeholder="Enter your password"
               type="password"
               disabled={isLoading}
+              name="password"
             />
           </div>
+
+          {
+            error ?
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert> : null
+          }
+
+
+
           <Button className="w-full" disabled={isLoading}>
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
