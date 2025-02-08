@@ -13,7 +13,9 @@ export default function Home() {
         </div>
         <div className="flex items-center gap-4">
           <ModeToggle />
-          <Button variant="outline">Log in</Button>
+          <Button variant="outline">
+            <Link href="/login">Log In</Link>
+          </Button>
           <Button>
             <Link href="/signup">Sign Up</Link>
           </Button>

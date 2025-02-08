@@ -11,13 +11,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus } from "lucide-react";
 
 interface AddProjectDialogProps {
   onProjectAdd: (title: string, description: string) => void;
+  children: React.ReactNode;
 }
 
-export function AddProjectDialog({ onProjectAdd }: AddProjectDialogProps) {
+export function AddProjectDialog({
+  onProjectAdd,
+  children,
+}: AddProjectDialogProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -29,11 +32,7 @@ export function AddProjectDialog({ onProjectAdd }: AddProjectDialogProps) {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button className="fixed bottom-6 right-6 rounded-full w-12 h-12 p-0">
-          <Plus className="h-6 w-6" />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Project</DialogTitle>

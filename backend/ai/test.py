@@ -1,37 +1,57 @@
-from data_analysist import DataAnalyzerAgent
-from typing import List, Dict, Any
+from data_reporter import DataReporter
 
-def main():
-    print("\n=== Testing Data Analyzer Workflow ===")
+def run_example():
+    # Initialize the reporter
+    reporter = DataReporter()
     
-    # Initialize test data
-    test_headers = ["date", "revenue", "customer_id", "product"]
-    test_sample_row = ["2024-01-01", "1000", "C123", "Widget"]
-    test_metadata = {
-        "date": "datetime",
-        "revenue": "int",
-        "customer_id": "int",
-        "product": "str"
-    }
-    test_business_type = "e-commerce"
-
-    # Create agent instance
-    analyzer = DataAnalyzerAgent()
-
-    # Run analysis with result checking
-    result = analyzer.analyze_repo(
-        header=test_headers,
-        sample_row=test_sample_row,
-        metadata=test_metadata,
-        business_type=test_business_type
+    # Prepare test data with meaningful business metrics
+    test_data = [
+        {
+            "Revenue Growth": {
+                "2020": "$1M",
+                "2021": "$1.5M",
+                "2022": "$2.2M",
+                "2023": "$3.1M"
+            }
+        },
+        {
+            "Customer Metrics": {
+                "Active Users": 50000,
+                "Retention Rate": "85%",
+                "Customer Satisfaction": 4.8,
+                "NPS Score": 72
+            }
+        },
+        {
+            "Market Performance": {
+                "Market Share": "23%",
+                "Competitor Rank": "#2",
+                "Industry Growth": "15%",
+                "Brand Value": "$500M"
+            }
+        }
+    ]
+    
+    # Generate the report
+    result = reporter.write_report(
+        meta_data="2023 Annual Business Performance Analysis",
+        data=test_data,
+        business_type="Technology SaaS Company",
+        num_sections=len(test_data)
     )
-
-    if result:
-        print("\nTest Results:")
-        print(f"Analysis: {result.get('analysis', 'No analysis available')}")
-        print(f"Visualization Plan: {result.get('data_visualization', 'No visualization available')}")
-    else:
-        print("\nAnalysis completed without results")
+    
+    # Display results
+    print("\n=== SECTION REPORTS ===")
+    for i, report in enumerate(result["sub_reports"], 1):
+        print(f"\nSection {i} Analysis:")
+        print("-" * 50)
+        print(report)
+        print("-" * 50)
+    
+    print("\n=== FINAL COMPREHENSIVE REPORT ===")
+    print("=" * 50)
+    print(result["final_report"])
+    print("=" * 50)
 
 if __name__ == "__main__":
-    main()
+    run_example()
