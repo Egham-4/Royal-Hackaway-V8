@@ -22,7 +22,7 @@ interface Project {
   description: string;
 }
 
-export default function ProjectsPage() {
+export default function HomePage() {
   const initialProjects = [
     {
       id: 1,
@@ -101,6 +101,7 @@ export default function ProjectsPage() {
             {projects.map((project) => (
               <ProjectCard
                 key={project.id}
+                id={project.id}
                 title={project.title}
                 description={project.description}
               />
