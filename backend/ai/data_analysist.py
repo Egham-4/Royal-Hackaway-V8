@@ -11,10 +11,14 @@ logger = logging.getLogger(__name__)
 class ImportantHeaders(BaseModel):
     headers: List[str] = Field(description="List of important headers")
 
+class MetadataField(TypedDict):
+    dtype: str
+    unique_values: int
+
 class DataAnalyzerState(TypedDict):
     header: List[str]
     sample_row: List[Any]
-    metadata: Dict[str, str]
+    metadata: Dict[str, MetadataField]
     data_visualization: VisualizationTypes
     analysis: ImportantHeaders
     business_type: str
