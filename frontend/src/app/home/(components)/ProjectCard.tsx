@@ -9,21 +9,26 @@ import {
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
+// Declare prop types
 interface ProjectCardProps {
+  id: number;
   title: string;
   description: string;
 }
 
-export function ProjectCard({ title, description }: ProjectCardProps) {
+// Pass in props into function.
+export function ProjectCard({ id, title, description }: ProjectCardProps) {
+  const router = useRouter();
   return (
     <Card className="w-[350px] h-[200px] flex flex-col justify-between p-4">
       <div>
         <CardTitle>{title}</CardTitle>
         <CardDescription className="mt-4">{description}</CardDescription>
       </div>
-      <Button asChild>
-        <Link href="/signup">View More Details</Link>
+      <Button onClick={() => router.push(`/projects/${id}`)}>
+        View Analysis
       </Button>
     </Card>
   );
