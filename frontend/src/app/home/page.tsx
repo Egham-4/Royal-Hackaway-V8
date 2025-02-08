@@ -26,23 +26,6 @@ interface Project {
 }
 
 export default function HomePage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
-  setLoading(false)
-
-  const user: User = getUser()
-  console.log(user)
-
-  //useEffect(() => {
-  //  if (!isAuthenticated()) {
-  //    router.push('/login')
-  //  }
-  //  else {
-  //    setLoading(false)
-  //  }
-  //})
-
-
   const initialProjects = [
     {
       id: 1,
