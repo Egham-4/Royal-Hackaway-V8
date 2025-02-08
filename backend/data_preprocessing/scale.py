@@ -21,9 +21,7 @@ def adaptive_scaling(file_path, output_path):
         if data[col].nunique() <= 12 or set(data[col].unique()).issubset({0, 1})  # Small range or binary
     ]
 
-    # Identify unique identifier columns (columns where all values are unique)
-    identifier_cols = [col for col in numeric_cols if data[col].nunique() == len(data)]
-    
+
     # Identify if the entire dataset has only small values (≤ 12)
     all_values_below_12 = all(data[col].max() <= 12 for col in numeric_cols)
 
@@ -45,6 +43,6 @@ def adaptive_scaling(file_path, output_path):
     print("Adaptive scaling complete. File saved at:", output_path)
 
 # Example usage
-input_file = "backend/data_preprocessing/food.csv"
-output_file = "backend/data_preprocessing/scaled_food.csv"
+input_file = "backend/data_preprocessing/hotel_book.csv"
+output_file = "backend/data_preprocessing/cleaned_hotel_book.csv"
 adaptive_scaling(input_file, output_file)
