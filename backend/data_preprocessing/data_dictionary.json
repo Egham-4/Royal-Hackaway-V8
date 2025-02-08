@@ -1,0 +1,271 @@
+{
+    "header": [
+        "Date",
+        "Month",
+        "Weekday",
+        "Season",
+        "Holiday",
+        "Marketing_Spend",
+        "Revenue",
+        "Room_Revenue",
+        "Occupancy_Rate",
+        "ADR",
+        "RevPAR",
+        "Available_Rooms",
+        "Reserved_Rooms",
+        "Booking_Channel",
+        "Guest_Type",
+        "Market_Segment",
+        "Guest_Country",
+        "Complaints",
+        "Compliment",
+        "Bookings",
+        "No_Shows",
+        "Cancellations",
+        "Checkouts",
+        "New_Bookings",
+        "Checkins",
+        "Average_Review_Score",
+        "Revenue_Managed_Guests",
+        "RevPAR_Managed_Guests",
+        "Occupancy_Managed_Guests",
+        "RevPAR_All",
+        "Occupancy_All",
+        "Room_Revenue_All",
+        "Total_Revenue",
+        "Operating_Expenses",
+        "Fixed_Costs",
+        "Variable_Costs",
+        "Total_Costs"
+    ],
+    "sample_row": [
+        [
+            "01/01/2024",
+            1,
+            1,
+            "Winter",
+            1,
+            0.0,
+            0.1333333333333337,
+            0.2857142857142856,
+            0.75,
+            0.25,
+            0.3691731881592375,
+            0.3999999999999994,
+            10,
+            "Direct",
+            "Leisure",
+            0.25,
+            "USA",
+            2,
+            0,
+            10,
+            1,
+            0,
+            8,
+            2,
+            1,
+            4.5,
+            0.1333333333333337,
+            4.5,
+            0.25,
+            4.5,
+            0.75,
+            0.2857142857142856,
+            0.2000000000000001,
+            0.0,
+            0.3333333333333332,
+            0.3888888888888888,
+            0.3157894736842104
+        ],
+        [
+            "02/01/2024",
+            1,
+            2,
+            "Winter",
+            0,
+            0.5,
+            0.4666666666666668,
+            0.7142857142857144,
+            0.78,
+            0.5,
+            0.6243620279006463,
+            0.7999999999999998,
+            8,
+            "OTA",
+            "Business",
+            0.2,
+            "UK",
+            1,
+            1,
+            9,
+            2,
+            1,
+            7,
+            3,
+            2,
+            4.6,
+            0.4666666666666668,
+            4.6,
+            0.625,
+            4.6,
+            0.78,
+            0.7142857142857144,
+            0.7000000000000002,
+            1.0,
+            0.6666666666666667,
+            0.833333333333333,
+            0.0
+        ]
+    ],
+    "metadata": {
+        "Date": {
+            "dtype": "object",
+            "unique_values": 109
+        },
+        "Month": {
+            "dtype": "int64",
+            "unique_values": 4
+        },
+        "Weekday": {
+            "dtype": "int64",
+            "unique_values": 7
+        },
+        "Season": {
+            "dtype": "object",
+            "unique_values": 3
+        },
+        "Holiday": {
+            "dtype": "int64",
+            "unique_values": 2
+        },
+        "Marketing_Spend": {
+            "dtype": "float64",
+            "unique_values": 5
+        },
+        "Revenue": {
+            "dtype": "float64",
+            "unique_values": 15
+        },
+        "Room_Revenue": {
+            "dtype": "float64",
+            "unique_values": 8
+        },
+        "Occupancy_Rate": {
+            "dtype": "float64",
+            "unique_values": 9
+        },
+        "ADR": {
+            "dtype": "float64",
+            "unique_values": 12
+        },
+        "RevPAR": {
+            "dtype": "float64",
+            "unique_values": 16
+        },
+        "Available_Rooms": {
+            "dtype": "float64",
+            "unique_values": 6
+        },
+        "Reserved_Rooms": {
+            "dtype": "int64",
+            "unique_values": 7
+        },
+        "Booking_Channel": {
+            "dtype": "object",
+            "unique_values": 2
+        },
+        "Guest_Type": {
+            "dtype": "object",
+            "unique_values": 2
+        },
+        "Market_Segment": {
+            "dtype": "float64",
+            "unique_values": 8
+        },
+        "Guest_Country": {
+            "dtype": "object",
+            "unique_values": 6
+        },
+        "Complaints": {
+            "dtype": "int64",
+            "unique_values": 4
+        },
+        "Compliment": {
+            "dtype": "int64",
+            "unique_values": 3
+        },
+        "Bookings": {
+            "dtype": "int64",
+            "unique_values": 5
+        },
+        "No_Shows": {
+            "dtype": "int64",
+            "unique_values": 3
+        },
+        "Cancellations": {
+            "dtype": "int64",
+            "unique_values": 2
+        },
+        "Checkouts": {
+            "dtype": "int64",
+            "unique_values": 4
+        },
+        "New_Bookings": {
+            "dtype": "int64",
+            "unique_values": 3
+        },
+        "Checkins": {
+            "dtype": "int64",
+            "unique_values": 2
+        },
+        "Average_Review_Score": {
+            "dtype": "float64",
+            "unique_values": 5
+        },
+        "Revenue_Managed_Guests": {
+            "dtype": "float64",
+            "unique_values": 15
+        },
+        "RevPAR_Managed_Guests": {
+            "dtype": "float64",
+            "unique_values": 5
+        },
+        "Occupancy_Managed_Guests": {
+            "dtype": "float64",
+            "unique_values": 9
+        },
+        "RevPAR_All": {
+            "dtype": "float64",
+            "unique_values": 5
+        },
+        "Occupancy_All": {
+            "dtype": "float64",
+            "unique_values": 9
+        },
+        "Room_Revenue_All": {
+            "dtype": "float64",
+            "unique_values": 8
+        },
+        "Total_Revenue": {
+            "dtype": "float64",
+            "unique_values": 9
+        },
+        "Operating_Expenses": {
+            "dtype": "float64",
+            "unique_values": 5
+        },
+        "Fixed_Costs": {
+            "dtype": "float64",
+            "unique_values": 5
+        },
+        "Variable_Costs": {
+            "dtype": "float64",
+            "unique_values": 12
+        },
+        "Total_Costs": {
+            "dtype": "float64",
+            "unique_values": 10
+        }
+    }
+}
