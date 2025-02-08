@@ -28,7 +28,7 @@ export function ProjectCard({ id, title, description }: ProjectCardProps) {
         <CardDescription className="mt-4">{description}</CardDescription>
       </div>
       <Button onClick={() => router.push(`/projects/${id}`)}>
-        View Analysis
+        View Project
       </Button>
     </Card>
   );

@@ -8,7 +8,7 @@ export default function Home() {
     <div className="min-h-screen">
       <nav className="flex items-center justify-between p-6">
         <div className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Logo" width={40} height={40} />
+          <Image src="/images/key-logo.png" alt="Logo" width={40} height={40} />
           <span className="text-xl font-bold">Analytics AI</span>
         </div>
         <div className="flex items-center gap-4">
