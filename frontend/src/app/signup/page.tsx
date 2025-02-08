@@ -5,12 +5,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Icons } from "@/components/icons";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { AlertCircle } from "lucide-react";
 
 export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
-  //const router = useRouter()
+  const [error, setError] = useState('')
+  const router = useRouter()
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
@@ -37,20 +40,18 @@ export default function SignUpPage() {
     })
 
     let json = await response.json()
-    console.log(json)
 
-    //if (response.status == 200) {
-    //  router.push('/login')
-    //} else {
-    //  router.push('/register')
-    //}
-    // TODO: on success redirect to login page.
-    // TODO: on failure display message
+    if (response.status == 200) {
+      router.push('/login')
+    }
 
+    if (response.status == 409) {
+      setError(json.error)
+      registerform.reset()
+    }
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+    // stop loading
+    setIsLoading(false)
   }
 
   return (
@@ -130,6 +131,16 @@ export default function SignUpPage() {
                 required
               />
             </div>
+
+            {
+              error ?
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert> : null
+            }
+
 
             <Button className="w-full" disabled={isLoading}>
               {isLoading && (
