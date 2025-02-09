@@ -1,12 +1,13 @@
 "use client";
 
-import { BarChart3, LineChart, PieChart } from "lucide-react";
 import { MetricCard } from "../(components)/MetricCard";
 import { Button } from "@/components/ui/button";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ArrowRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { BarChart3, LineChart, PieChart as PieChartIcon } from "lucide-react";
+import { PieChart } from "recharts";
 
 import {
   LineChart as RechartsLineChart,
@@ -26,7 +27,7 @@ import {
 import { Sparkles, LightbulbIcon } from "lucide-react";
 
 // Add this sample data for the pie chart
-const pieData = [
+const pieChartData = [
   { name: "Category A", value: 400 },
   { name: "Category B", value: 300 },
   { name: "Category C", value: 300 },
@@ -63,7 +64,7 @@ export default function AnalyticsPage({ params }: { params: { id: string } }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <MetricCard title="Total Records" value="1,234" icon={BarChart3} />
             <MetricCard title="Total Charts" value="4" icon={LineChart} />
-            <MetricCard title="Categories" value="8" icon={PieChart} />
+            <MetricCard title="Categories" value="8" icon={PieChartIcon} />
           </div>
           {/* Data Table */}
           <div className="bg-card rounded-lg p-6">
@@ -150,39 +151,46 @@ export default function AnalyticsPage({ params }: { params: { id: string } }) {
                 Category Distribution
               </h3>
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart margin={{ top: 0, right: 30, bottom: 0, left: 30 }}>
                   <Pie
-                    data={pieData}
+                    data={pieChartData}
+                    dataKey="value"
+                    nameKey="name"
                     cx="50%"
                     cy="50%"
                     innerRadius={60}
                     outerRadius={80}
                     fill="#8884d8"
                     paddingAngle={5}
-                    dataKey="value"
+                    label
                   >
-                    {pieData.map((entry, index) => (
+                    {pieChartData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
-                        stroke="none"
+                        style={{
+                          filter: "drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.1))",
+                        }}
                       />
                     ))}
                   </Pie>
                   <Tooltip
                     formatter={(value, name) => [`${value} units`, name]}
-                    contentStyle={{ borderRadius: "8px" }}
+                    contentStyle={{
+                      borderRadius: "8px",
+                      backgroundColor: "rgba(255, 255, 255, 0.95)",
+                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    }}
                   />
                   <Legend
-                    layout="vertical"
-                    align="right"
                     verticalAlign="middle"
+                    align="right"
+                    layout="vertical"
                     iconType="circle"
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
-
             {/* Chart 4 - Line Chart with Different Styling */}
             <div className="p-6 bg-card rounded-lg h-[300px]">
               <h3 className="text-xl font-semibold mb-4">Trend Analysis</h3>
