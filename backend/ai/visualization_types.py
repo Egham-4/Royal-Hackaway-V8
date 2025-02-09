@@ -28,17 +28,6 @@ class BarChartVisualization(BaseModel):
     orientation: Literal["vertical", "horizontal"] = Field("vertical", description="Orientation of the bar chart.")
     stacked: bool = Field(False, description="True if the bar chart should be stacked; False otherwise.")
 
-
-#Scatter Plot visualizations.
-class ScatterPlotVisualization(BaseModel):
-    chart_type: Literal["scatter"] = Field("scatter", description="Specifies that this is a scatter plot visualization.")
-    x_axis: str = Field(..., description="The exact name of the column for the x-axis.")
-    y_axis: str = Field(..., description="The exact name of the column for the y-axis.")
-    # Optional grouping or color dimension.
-    color: Optional[str] = Field(None, description="Optional column name for color grouping.")
-    marker: str = Field("o", description="The marker style for the scatter plot.")
-
-
 # Define a model for Area Chart visualizations.
 class AreaChartVisualization(BaseModel):
     chart_type: Literal["area"] = Field("area", description="Specifies that this is an area chart visualization.")
@@ -52,7 +41,6 @@ class VisualizationTypes(BaseModel):
         LineGraphVisualization,
         PieChartVisualization,
         BarChartVisualization,
-        ScatterPlotVisualization,
         AreaChartVisualization
     ]] = Field(..., description="3 Parameters that define how to visualize the data.")
 

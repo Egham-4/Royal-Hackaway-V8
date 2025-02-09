@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { fetch_auth } from "@/app/utils/auth";
 
 interface AddDatasetDialogProps {
   onDatasetAdd: (title: string, description: string, file: File | null) => void;
@@ -37,13 +38,17 @@ export function AddDatasetDialog({
     let fileUploadUrl = process.env.API_URL + '/fileupload'
     console.log(fileUploadUrl)
 
-    const response = await fetch(fileUploadUrl, {
+    //const response = await fetch(fileUploadUrl, {
+    //  method: "POST",
+    //  body: formData
+    //})
+    //
+    const response = await fetch_auth(fileUploadUrl, {
       method: "POST",
       body: formData
     })
 
-    const data = await response.json()
-    console.log(data)
+    console.log(response)
 
     setTitle("");
     setDescription("");

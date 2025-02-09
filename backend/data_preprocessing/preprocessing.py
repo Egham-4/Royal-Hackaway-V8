@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
-def adaptive_scaling(file_path, output_path):
+def adaptive_scaling(file):
     """
     Loads a dataset, detects numerical columns, and applies MinMax scaling 
     dynamically while excluding unique identifier columns that are sequential.
@@ -11,7 +11,8 @@ def adaptive_scaling(file_path, output_path):
     - If some values are > 13, only large-value columns are scaled while categorical-like numbers are kept unchanged.
     """
     # Load dataset
-    data = pd.read_csv(file_path)
+    # data = pd.read_csv(file)
+    data = file
     
     # Remove rows with missing values
     data = data.dropna()
@@ -51,12 +52,4 @@ def adaptive_scaling(file_path, output_path):
         data[scalable_cols] = scaler.fit_transform(data[scalable_cols])
 
     # Save the cleaned and normalized dataset
-    data.to_csv(output_path, index=False)
-
-    print("Adaptive scaling complete. File saved at:", output_path)
-    print(f"Excluded Unique Identifier Columns: {unique_identifier_cols}")
-
-# Example usage
-input_file = "backend/data_preprocessing/food.csv"
-output_file = "backend/data_preprocessing/cleanfood.csv"
-adaptive_scaling(input_file, output_file)
+    return data
