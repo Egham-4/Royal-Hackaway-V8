@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ModeToggle } from "../ModeToggle";
 
 export default function Hero() {
   const [expanded, setExpanded] = useState(false);
@@ -147,13 +148,13 @@ export default function Hero() {
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto text-center">
             <h1 className="px-6 text-lg text-gray-600 font-inter">
-              Smart email campaign builder, made for Developers
+              AI Business Analysis Platform Built For SMES
             </h1>
-            <p className="mt-5 text-4xl font-bold leading-tight text-gray-900 sm:leading-tight sm:text-5xl lg:text-6xl lg:leading-tight font-pj">
-              Turn your visitors into profitable
+            <p className="mt-5 text-3xl font-bold leading-tight text-gray-900 sm:leading-tight sm:text-5xl lg:text-6xl lg:leading-tight font-pj">
+              Scale Your Business With AI Technology
               <span className="relative inline-flex sm:inline">
                 <span className="bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] blur-lg filter opacity-30 w-full h-full absolute inset-0"></span>
-                <span className="relative"> business </span>
+                <span className="relative"> </span>
               </span>
             </p>
 
