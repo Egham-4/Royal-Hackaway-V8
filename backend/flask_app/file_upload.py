@@ -10,6 +10,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSTIONS
 
 @bp.route('/fileupload', methods=['POST'])
+@jwt_required()
 def file_upload():
     # user_email = get_jwt_identity()
     user_email = 'hamza@rafi.com'
