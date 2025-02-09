@@ -1,7 +1,5 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
-import pymongo
-
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -21,5 +19,9 @@ def create_app():
     app.register_blueprint(file_upload.bp)
     
     return app
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(host="0.0.0.0", port=5000)
 
 

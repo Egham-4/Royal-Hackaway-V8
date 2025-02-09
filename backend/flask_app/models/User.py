@@ -1,4 +1,4 @@
-from backend.models.Collection import Collection
+from flask_app.models.Collection import Collection
 import bcrypt
 
 class User(Collection):
