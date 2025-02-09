@@ -35,10 +35,15 @@ export function getUser() {
 
 export async function fetch_auth(url: string, opts) {
   opts.headers = {
+    ...opts.headers,
     "Authorization": "Bearer " + getToken()
   }
   let response = await fetch(url, opts)
   let json = await response.json()
 
   return json
+}
+
+export function buildApiUrl(endpoint: string) {
+  return process.env.API_URL + endpoint
 }
