@@ -1,10 +1,11 @@
 import pandas as pd
 import json
 
-def generate_data_dictionary(file_path, output_path):
+def generate_data_dictionary(file):
 
     # Load the dataset
-    data = pd.read_csv(file_path)
+    # data = pd.read_csv(file)
+    data = file
 
     # Extract headers
     header = list(data.columns)
@@ -28,13 +29,15 @@ def generate_data_dictionary(file_path, output_path):
         "metadata": metadata
     }
 
+    return extracted_data
+
     # Save the extracted data as a JSON dictionary
-    with open(output_path, "w") as f:
-        json.dump(extracted_data, f, indent=4)
+    # with open(output_path, "w") as f:
+    #     json.dump(extracted_data, f, indent=4)
+    #
+    # print("Data dictionary generated and saved at:", output_path)
 
-    print("Data dictionary generated and saved at:", output_path)
-
-# Example usage
-input_file = "backend/data_preprocessing/cleaned_hotel_book.csv"
-output_file = "backend/data_preprocessing/data_dictionary.json"
-generate_data_dictionary(input_file, output_file)
+# # Example usage
+# input_file = "backend/data_preprocessing/cleaned_hotel_book.csv"
+# output_file = "backend/data_preprocessing/data_dictionary.json"
+# generate_data_dictionary(input_file, output_file)

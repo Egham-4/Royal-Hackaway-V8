@@ -25,3 +25,9 @@ class Collection:
         collection = self.get_collection()
         result = collection.find_one({key: value}, {"_id": 0})
         return result if result else None
+
+    def find_all(self, query):
+        collection = self.get_collection()
+        query = query or {}
+        results = collection.find(query, {"_id": 0})
+        return list(results)

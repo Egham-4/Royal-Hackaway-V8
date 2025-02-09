@@ -3,8 +3,8 @@ from langgraph.graph import StateGraph, START, END
 from langchain_groq import ChatGroq
 import logging
 from pydantic import BaseModel, Field 
-from prompts import data_analyser, visualization_plan
-from visualization_types import VisualizationTypes 
+from ai.prompts import data_analyser, visualization_plan
+from ai.visualization_types import VisualizationTypes 
 
 logger = logging.getLogger(__name__)
 

@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/icons";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { saveToken, saveUser } from "../utils/auth";
+import { buildApiUrl, saveToken, saveUser } from "../utils/auth";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,35 +21,34 @@ export default function LoginPage() {
     event.preventDefault();
     setIsLoading(true);
 
-    //let formData = {
-    //  email: loginform.email.value,
-    //  password: loginform.password.value
-    //}
-    //let loginUrl = process.env.API_URL + '/auth/login'
-    //
-    //let response = await fetch(loginUrl, {
-    //  method: "POST",
-    //  headers: {
-    //  router.push("/home");
-    //    "Content-Type": "application/json"
-    //  },
-    //  body: JSON.stringify(formData)
-    //
-    //})
-    //
-    //let json = await response.json()
-    //
+    let formData = {
+      email: loginform.email.value,
+      password: loginform.password.value
+    }
+    let loginUrl = buildApiUrl('/auth/login')
 
-    router.push("/home");
-    //if (response.status == 200) {
-    //  saveToken(json.access_token)
-    //  saveUser(json.user)
-    //}
-    //
-    //if (response.status == 401) {
-    //  setError(json.error)
-    //  loginform.reset()
-    //}
+    let response = await fetch(loginUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+
+    })
+
+    let json = await response.json()
+    console.log(json)
+
+    if (response.status == 200) {
+      saveToken(json.access_token)
+      saveUser(json.user)
+      router.push("/home");
+    }
+
+    if (response.status == 401) {
+      setError(json.error)
+      loginform.reset()
+    }
 
     // stop loading
     setIsLoading(false)

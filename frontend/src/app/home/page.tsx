@@ -16,8 +16,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { getUser, isAuthenticated, removeToken, User } from "../utils/auth";
+import { buildApiUrl, fetch_auth, getUser, isAuthenticated, removeToken, User } from "../utils/auth";
 import { useRouter } from "next/navigation";
+import { headers } from "next/headers";
 
 interface Project {
   id: number;
@@ -26,43 +27,53 @@ interface Project {
 }
 
 export default function HomePage() {
-  const initialProjects = [
-    {
-      id: 1,
-      title: "Occupancy Rate Analysis",
-      description:
-        "Track and forecast room occupancy rates across seasons to optimize pricing and availability.",
-    },
-    {
-      id: 2,
-      title: "Guest Satisfaction Metrics",
-      description:
-        "Analyze guest reviews and feedback to identify key areas of improvement and maintain high service standards.",
-    },
-    {
-      id: 3,
-      title: "Revenue Per Room",
-      description:
-        "Monitor RevPAR trends and identify opportunities to maximize revenue through dynamic pricing strategies.",
-    },
-    {
-      id: 4,
-      title: "Booking Channel Performance",
-      description:
-        "Compare effectiveness of different booking platforms and optimize distribution channel strategy.",
-    },
-  ];
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [projects, setProjects] = useState<Project[]>([]);
 
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  //const user: User = getUser()
+  let projectUrl = buildApiUrl('/project')
+  let getProjectsUrl = buildApiUrl('/projects')
 
-  const handleAddProject = (title: string, description: string) => {
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push('/login')
+    }
+    else {
+      const fetchProjects = async () => {
+        let response = await fetch_auth(getProjectsUrl, {
+          method: 'GET'
+        })
+        console.log(response)
+        setProjects(response)
+      }
+      fetchProjects()
+      setLoading(false)
+    }
+  }, [])
+
+
+
+  const handleAddProject = async (title: string, description: string) => {
     const newProject = {
       id: Date.now(),
       title,
       description,
     };
+
+    let response = await fetch_auth(projectUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newProject)
+    })
+    console.log(response)
+
     setProjects([...projects, newProject]);
   };
+
+  if (loading) return <h1>Loading</h1>
 
   return (
     <SidebarProvider>
