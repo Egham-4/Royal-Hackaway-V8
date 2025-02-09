@@ -21,33 +21,35 @@ export default function LoginPage() {
     event.preventDefault();
     setIsLoading(true);
 
-    let formData = {
-      email: loginform.email.value,
-      password: loginform.password.value
-    }
-    let loginUrl = process.env.API_URL + '/auth/login'
+    //let formData = {
+    //  email: loginform.email.value,
+    //  password: loginform.password.value
+    //}
+    //let loginUrl = process.env.API_URL + '/auth/login'
+    //
+    //let response = await fetch(loginUrl, {
+    //  method: "POST",
+    //  headers: {
+    //  router.push("/home");
+    //    "Content-Type": "application/json"
+    //  },
+    //  body: JSON.stringify(formData)
+    //
+    //})
+    //
+    //let json = await response.json()
+    //
 
-    let response = await fetch(loginUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(formData)
-
-    })
-
-    let json = await response.json()
-
-    if (response.status == 200) {
-      saveToken(json.access_token)
-      saveUser(json.user)
-      router.push("/home");
-    }
-
-    if (response.status == 401) {
-      setError(json.error)
-      loginform.reset()
-    }
+    router.push("/home");
+    //if (response.status == 200) {
+    //  saveToken(json.access_token)
+    //  saveUser(json.user)
+    //}
+    //
+    //if (response.status == 401) {
+    //  setError(json.error)
+    //  loginform.reset()
+    //}
 
     // stop loading
     setIsLoading(false)

@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_cors import cross_origin
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 from flask_app.models.User import User
@@ -6,6 +7,7 @@ from flask_app.models.User import User
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=['POST'])
+@cross_origin()
 def register():
     content = request.get_json()
     username = content['username']
@@ -21,6 +23,7 @@ def register():
     return jsonify(response[0]), response[1]
 
 @bp.route('/login', methods=["POST"])
+@cross_origin()
 def login():
     content = request.get_json()
     email = content['email']
