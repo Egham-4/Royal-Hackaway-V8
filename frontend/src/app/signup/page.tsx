@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Icons } from "@/components/icons";
 import { useRouter } from "next/navigation";
 import { AlertCircle } from "lucide-react";
+import { buildApiUrl } from "../utils/auth";
 
 export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +30,7 @@ export default function SignUpPage() {
     }
 
     //let response = await fetch(process.env.API_URL + '/auth/register')
-    let registerUrl = process.env.API_URL + '/auth/register'
+    let registerUrl = buildApiUrl('/auth/register')
     let response = await fetch(registerUrl, {
       method: "POST",
       headers: {

@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/icons";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { saveToken, saveUser } from "../utils/auth";
+import { buildApiUrl, saveToken, saveUser } from "../utils/auth";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function LoginPage() {
       email: loginform.email.value,
       password: loginform.password.value
     }
-    let loginUrl = process.env.API_URL + '/auth/login'
+    let loginUrl = buildApiUrl('/auth/login')
 
     let response = await fetch(loginUrl, {
       method: "POST",
