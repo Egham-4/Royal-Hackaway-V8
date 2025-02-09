@@ -8,7 +8,7 @@ def load_json(file_path: str) -> dict:
     return data
 
 # Example usage
-data = load_json('/Users/attaimen/gitrepos/Royal-Hackaway-V8/backend/data_preprocessing/data_dictionary.json')
+data = load_json('backend\data_preprocessing\data_dictionary.json')
 header = data["header"]
 samplerow = data["sample_row"][0]
 metadata = data["metadata"]

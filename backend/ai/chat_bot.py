@@ -14,7 +14,7 @@ class ChatState(TypedDict):
 
 class ChatBot:
     def __init__(self):
-        self.llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.3)
+        self.llm = ChatGroq(model="deepseek-r1-distill-llama-70b", temperature=0.3)
         self.workflow = self._build_analyser_graph()
         self.memory = MemorySaver()
 
@@ -43,5 +43,5 @@ class ChatBot:
 
 if __name__ == "__main__":
     chatbot = ChatBot()
-    result = chatbot.chat("Hello!", report="Sample report content")
+    result = chatbot.chat("Simplify for me vector multiplication ", report="Sample report content")
     print(result)
