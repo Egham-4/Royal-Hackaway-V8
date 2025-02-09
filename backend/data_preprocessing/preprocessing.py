@@ -15,7 +15,7 @@ def adaptive_scaling(file):
     data = file
     
     # Remove rows with missing values
-    data = data.dropna()
+    data = data.dropna(axis=1, how='all')
     
     # Remove fully duplicate rows
     data = data.drop_duplicates()

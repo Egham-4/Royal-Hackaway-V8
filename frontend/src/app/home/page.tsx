@@ -36,20 +36,20 @@ export default function HomePage() {
   let getProjectsUrl = buildApiUrl('/projects')
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push('/login')
+    //if (!isAuthenticated()) {
+    //  router.push('/login')
+    //}
+    //else {
+    const fetchProjects = async () => {
+      let response = await fetch_auth(getProjectsUrl, {
+        method: 'GET'
+      })
+      console.log(response)
+      setProjects(response)
     }
-    else {
-      const fetchProjects = async () => {
-        let response = await fetch_auth(getProjectsUrl, {
-          method: 'GET'
-        })
-        console.log(response)
-        setProjects(response)
-      }
-      fetchProjects()
-      setLoading(false)
-    }
+    fetchProjects()
+    setLoading(false)
+    //}
   }, [])
 
 

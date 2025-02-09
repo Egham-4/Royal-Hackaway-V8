@@ -5,7 +5,7 @@ import logging
 from pydantic import BaseModel, Field 
 from ai.prompts import data_analyser, visualization_plan
 from ai.visualization_types import VisualizationTypes 
-
+    
 logger = logging.getLogger(__name__)
 
 class ImportantHeaders(BaseModel):
@@ -14,6 +14,8 @@ class ImportantHeaders(BaseModel):
 class MetadataField(TypedDict):
     dtype: str
     unique_values: int
+
+
 
 class DataAnalyzerState(TypedDict):
     header: List[str]
@@ -55,7 +57,7 @@ class DataAnalyzerAgent:
             "header": state["header"],
             "sample_row": state["sample_row"]
         })
-        
+        print(result)
         logger.info("Data analysis completed")
         return {
             **state,
@@ -74,6 +76,7 @@ class DataAnalyzerAgent:
         })
         
         logger.info("Visualization generation completed")
+        print(result)
         return {
             **state,
             "data_visualization": result,
@@ -81,13 +84,12 @@ class DataAnalyzerAgent:
 
     def analyse_data(self, header: List[str], sample_row: List[Any], 
                     metadata: Dict[str, MetadataField], business_type: str) -> Dict[str, Any]:
-        logger.info("Starting repository analysis")
+        logger.info("Starting data analysis")
         
         initial_state = {
             "header": header,
             "sample_row": sample_row,
             "metadata": metadata,
-            "analysis": "",
             "business_type": business_type
         }
 

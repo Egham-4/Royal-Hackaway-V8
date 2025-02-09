@@ -5,7 +5,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { FloatingActionButton } from "./(components)/FloatingActionButton";
-import { DatasetCard } from "./(components)/DatasetCard";
+import { DatasetCard } from "./(components)/DataSetCard";
 
 interface Dataset {
   id: string;

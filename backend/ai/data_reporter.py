@@ -102,6 +102,3 @@ class DataReporter:
             "sub_reports": result["sub_reports"],
             "final_report": result["final_report"]
         }
-
-
-

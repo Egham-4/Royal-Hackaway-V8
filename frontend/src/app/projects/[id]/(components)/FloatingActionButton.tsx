@@ -1,5 +1,6 @@
 "use client";
 
+import { buildApiUrl, fetch_auth } from "@/app/utils/auth";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,9 +22,23 @@ export function FloatingActionButton({ onSubmit }: FloatingActionButtonProps) {
   const [file, setFile] = useState<File | null>(null);
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(title, description, file);
+
+    let formData = new FormData()
+    formData.append('file', file)
+    formData.append('title', title)
+    formData.append('description', description)
+
+    let uploadURL = buildApiUrl('/fileupload')
+    let response = await fetch_auth(uploadURL, {
+      method: "POST",
+      body: formData
+    })
+
+    console.log(response)
+
     setTitle("");
     setDescription("");
     setFile(null);
