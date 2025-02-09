@@ -14,9 +14,10 @@ import { useState } from "react";
 
 interface FloatingActionButtonProps {
   onSubmit: (title: string, description: string, file: File | null) => void;
+  project_id: number;
 }
 
-export function FloatingActionButton({ onSubmit }: FloatingActionButtonProps) {
+export function FloatingActionButton({ onSubmit, project_id }: FloatingActionButtonProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -30,6 +31,7 @@ export function FloatingActionButton({ onSubmit }: FloatingActionButtonProps) {
     formData.append('file', file)
     formData.append('title', title)
     formData.append('description', description)
+    formData.append('project_id', project_id)
 
     let uploadURL = buildApiUrl('/fileupload')
     let response = await fetch_auth(uploadURL, {

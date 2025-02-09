@@ -7,7 +7,6 @@ from data_preprocessing import preprocessing
 from data_preprocessing import data_profiler
 from ai import data_reporter
 from ai import data_analysist, visualization_types
-import logging
 from ai.visualization_types import PieChartVisualization, LineGraphVisualization, BarChartVisualization, AreaChartVisualization
 import pandas as pd
 
@@ -19,6 +18,13 @@ ALLOWED_EXTENSTIONS = ['csv']
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSTIONS
 
+@bp.route('/getdata/<string:project_id>', methods=['GET'])
+def get_data(project_id=None):
+    datafile = DataFile()
+    results = datafile.get_datasets_by_project_id(project_id)
+    return jsonify(results)
+
+
 @bp.route('/fileupload', methods=['POST'])
 @jwt_required()
 def file_upload():
@@ -28,8 +34,9 @@ def file_upload():
         return jsonify({"error": "no file provided"}), 400
 
     file = request.files['file']
-    title = request.files['title']
-    description = request.files['description']
+    title = request.form.get('title')
+    description = request.form.get('description')
+    project_id = request.form.get('project_id')
 
 
     # file is empty
@@ -127,11 +134,23 @@ def file_upload():
                 num_sections=len(list(datavis))
             )
 
+    # def store_file(self, project_id, title, description, clean_file, final_report, summary, sub_reports):
             print(result)
             print()
             print(visualisation[0])
+            print(title)
+            print(description)
+            datafile = DataFile()
+            datafile.store_file(
+                project_id,
+                title,
+                description,
+                result['final_report'],
+                result['summary'],
+                result['sub_reports']
+            )
 
-            print(title, description)
+
 
             #logging.info("Report generation completed successfully.")
         except Exception as e:
@@ -140,8 +159,6 @@ def file_upload():
 
 
 
-        # datafile = DataFile()
-        # datafile.store_file(user_email, file.filename, file)
 #         clean_csv = preprocessing.adaptive_scaling(file)
 #         extracted_data = data_profiler.generate_data_dictionary(clean_csv)
 #

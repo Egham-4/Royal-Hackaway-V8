@@ -3,7 +3,7 @@ from langgraph.graph import StateGraph, START, END
 from langchain_groq import ChatGroq
 import logging
 from pydantic import BaseModel, Field
-from ai.prompts import business_data_analysis, final_business_report
+from ai.prompts import business_data_analysis, final_business_report, summary_prompt
 from ai.visualization_types import VisualizationTypes
 
 logger = logging.getLogger(__name__)
@@ -17,6 +17,7 @@ class DataReporterState(TypedDict):
     business_type: str
     current_section: int
     total_sections: int
+    summary :str
 
 class DataReporter:
     def __init__(self):
@@ -35,7 +36,8 @@ class DataReporter:
         
         graph.add_node("process_section", self.process_section)
         graph.add_node("generate_final_report", self.data_reporter)
-
+        graph.add_node("summary_write",self.summary_write)
+    
         def should_continue(state: DataReporterState) -> str:
             return "process_section" if state["current_section"] < state["total_sections"] else "generate_final_report"
 
@@ -49,7 +51,8 @@ class DataReporter:
                 }
             )
 
-        graph.add_edge("generate_final_report", END)
+        graph.add_edge("generate_final_report", "summary_write")
+        graph.add_edge("summary_write",END)
         return graph
 
     def process_section(self, state: DataReporterState) -> DataReporterState:
@@ -66,7 +69,27 @@ class DataReporter:
             "sub_reports": [*state["sub_reports"], str(result.content)],
             "current_section": state["current_section"] + 1
         }
+    
+    
+    def summary_write(self, state: DataReporterState) -> DataReporterState:
+        from langchain_core.prompts import ChatPromptTemplate
 
+        prompt = ChatPromptTemplate.from_messages(summary_prompt)
+        
+        chain = prompt | self.llm
+        
+        result = chain.invoke({
+            "report_text": state["final_report"],
+        })
+        
+        return {
+            **state,
+            "summary": str(result.content)
+        }
+
+
+    
+    
     def data_reporter(self, state: DataReporterState) -> DataReporterState:
         logger.info("Generating final report")
         
@@ -92,7 +115,8 @@ class DataReporter:
             "data": data,
             "business_type": business_type,
             "current_section": 0,
-            "total_sections": num_sections
+            "total_sections": num_sections,
+            "summary":""
         }
 
         compiled_graph = self.graph.compile()
@@ -100,5 +124,6 @@ class DataReporter:
         
         return {
             "sub_reports": result["sub_reports"],
-            "final_report": result["final_report"]
+            "final_report": result["final_report"],
+            "summary":result["summary"]
         }

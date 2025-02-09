@@ -5,7 +5,7 @@ import { Trash2 } from "lucide-react";
 interface DatasetCardProps {
   dataset: {
     id: string;
-    name: string;
+    title: string;
     description: string;
     date: string;
     size: string;
@@ -18,7 +18,7 @@ export function DatasetCard({ dataset, onDelete }: DatasetCardProps) {
     <Card className="relative group">
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
-          <span>{dataset.name}</span>
+          <span>{dataset.title}</span>
           <Button
             variant="ghost"
             size="icon"

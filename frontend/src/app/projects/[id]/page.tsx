@@ -3,9 +3,10 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FloatingActionButton } from "./(components)/FloatingActionButton";
 import { DatasetCard } from "./(components)/DataSetCard";
+import { buildApiUrl, fetch_auth } from "@/app/utils/auth";
 
 interface Dataset {
   id: string;
@@ -15,25 +16,42 @@ interface Dataset {
   size: string;
 }
 
-const datasets: Dataset[] = [
-  {
-    id: "1",
-    name: "Sales Data 2023",
-    description: "Annual sales performance data",
-    date: "2023-12-01",
-    size: "2.5 MB",
-  },
-  {
-    id: "2",
-    name: "Customer Feedback",
-    description: "Customer survey response",
-    date: "2023-11-15",
-    size: "1.8 MB",
-  },
-];
+//const datasets: Dataset[] = [
+//  {
+//    id: "1",
+//    name: "Sales Data 2023",
+//    description: "Annual sales performance data",
+//    date: "2023-12-01",
+//    size: "2.5 MB",
+//  },
+//  {
+//    id: "2",
+//    name: "Customer Feedback",
+//    description: "Customer survey response",
+//    date: "2023-11-15",
+//    size: "1.8 MB",
+//  },
+//];
 export default function ProjectPage() {
   const params = useParams();
   const id = params.id;
+  const [datasets, setDataset] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  let getDataUrl = buildApiUrl('/getdata/' + id?.toString())
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let response = await fetch_auth(getDataUrl, {
+        method: 'GET'
+      })
+      console.log(response)
+      setDataset(response)
+    }
+    fetchData()
+    setLoading(false)
+    //}
+  }, [])
 
   const handleAddDataset = (
     title: string,
@@ -46,6 +64,8 @@ export default function ProjectPage() {
   const handleDeleteDataset = (id: string) => {
     // Handle dataset deletion logic here
   };
+
+  if (loading) return <h1>Loading..</h1>
 
   return (
     <SidebarProvider>
@@ -76,13 +96,12 @@ export default function ProjectPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {datasets.map((dataset) => (
               <DatasetCard
-                key={dataset.id}
                 dataset={dataset}
                 onDelete={handleDeleteDataset}
               />
             ))}
 
-            <FloatingActionButton onSubmit={handleAddDataset} />
+            <FloatingActionButton onSubmit={handleAddDataset} project_id={id} />
           </div>
           <div></div>
         </div>
