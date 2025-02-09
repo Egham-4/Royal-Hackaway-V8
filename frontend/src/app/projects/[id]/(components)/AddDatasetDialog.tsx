@@ -88,7 +88,10 @@ export function AddDatasetDialog({
               Supported formats: CSV, Excel (.xlsx, .xls)
             </p>
           </div>
-          <Button onClick={handleSubmit}>Add Dataset</Button>
+          <DialogTrigger>
+
+            <Button onClick={handleSubmit}>Add Dataset</Button>
+          </DialogTrigger>
         </div>
       </DialogContent>
     </Dialog>

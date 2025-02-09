@@ -42,13 +42,17 @@ export function AddProjectDialog({
             placeholder="Project Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            required
           />
           <Textarea
             placeholder="Project Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            required
           />
-          <Button onClick={handleSubmit}>Create Project</Button>
+          <DialogTrigger>
+            <Button onClick={handleSubmit}>Create Project</Button>
+          </DialogTrigger>
         </div>
       </DialogContent>
     </Dialog>
