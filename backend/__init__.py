@@ -19,7 +19,8 @@ def create_app():
     from . import auth
     app.register_blueprint(auth.bp)
 
-    CORS(app)
+    from . import file_upload
+    app.register_blueprint(file_upload.bp)
     
     return app
 
