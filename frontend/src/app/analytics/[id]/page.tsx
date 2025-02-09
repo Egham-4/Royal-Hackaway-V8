@@ -28,6 +28,8 @@ import {
 
 import { Sparkles, LightbulbIcon } from "lucide-react";
 
+import { useRouter } from "next/router";
+
 // Add this sample data for the pie chart
 const pieChartData = [
   { name: "Category A", value: 400 },
@@ -47,6 +49,13 @@ const sampleData = [
 ];
 
 export default function AnalyticsPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
+
+  // Add this function to handle the button click
+  const handlePredictClick = () => {
+    router.push(`/prediction/${params.id}`);
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
