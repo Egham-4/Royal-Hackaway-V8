@@ -58,11 +58,19 @@ export default function ProjectPage() {
     description: string,
     file: File | null
   ) => {
-    // Handle dataset addition logic here
+    const newDataset: Dataset = {
+      id: (datasets.length + 1).toString(),
+      name: title,
+      description: description,
+      date: new Date().toISOString().split("T")[0],
+      size: file ? `${(file.size / (1024 * 1024)).toFixed(2)} MB` : "0 MB",
+    };
+
+    setDatasets([...datasets, newDataset]);
   };
 
   const handleDeleteDataset = (id: string) => {
-    // Handle dataset deletion logic here
+    setDatasets(datasets.filter((dataset) => dataset.id !== id));
   };
 
   if (loading) return <h1>Loading..</h1>
@@ -78,7 +86,6 @@ export default function ProjectPage() {
                 Project Analysis: #{id}
               </h1>
             </div>
-            {/* Cool Image Card */}
             <div className="w-full h-[420px] rounded-lg overflow-hidden shadow-lg">
               <img
                 src="/images/home.png"
@@ -103,7 +110,6 @@ export default function ProjectPage() {
 
             <FloatingActionButton onSubmit={handleAddDataset} project_id={id} />
           </div>
-          <div></div>
         </div>
       </SidebarInset>
     </SidebarProvider>
