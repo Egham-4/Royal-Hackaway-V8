@@ -1,16 +1,6 @@
-"use client";
-
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart3, Download, MoreVertical, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Trash2 } from "lucide-react";
 
 interface DatasetCardProps {
   dataset: {
@@ -20,53 +10,34 @@ interface DatasetCardProps {
     date: string;
     size: string;
   };
-  onDelete?: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export function DatasetCard({ dataset, onDelete }: DatasetCardProps) {
-  const router = useRouter();
-
-  const handleAnalyze = () => {
-    router.push(`/analytics/${dataset.id}`);
-  };
   return (
-    <Card className="flex flex-col p-4 space-y-4 transition-all duration-300 hover:shadow-md">
-      <div className="flex items-start justify-between">
-        <div className="space-y-1">
-          <h3 className="font-semibold">{dataset.name}</h3>
-          <p className="text-sm text-muted-foreground">{dataset.description}</p>
+    <Card className="relative group">
+      <CardHeader>
+        <CardTitle className="flex justify-between items-center">
+          <span>{dataset.name}</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={() => onDelete(dataset.id)}
+          >
+            <Trash2 className="h-4 w-4 text-red-500" />
+          </Button>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground mb-4">
+          {dataset.description}
+        </p>
+        <div className="flex justify-between text-sm text-muted-foreground">
+          <span>{dataset.date}</span>
+          <span>{dataset.size}</span>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onDelete?.(dataset.id)}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <div className="flex items-center text-sm text-muted-foreground">
-        <span>{dataset.date}</span>
-        <span className="mx-2">•</span>
-        <span>{dataset.size}</span>
-      </div>
-
-      <div className="flex gap-2 mt-auto">
-        <Button className="flex-1" variant="outline">
-          <Download className="mr-2 h-4 w-4" />
-          Download
-        </Button>
-        <Button className="flex-1" onClick={handleAnalyze}>
-          <BarChart3 className="mr-2 h-4 w-4" />
-          Analyze
-        </Button>
-      </div>
+      </CardContent>
     </Card>
   );
 }
