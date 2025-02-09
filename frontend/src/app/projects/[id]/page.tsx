@@ -15,36 +15,29 @@ interface Dataset {
   size: string;
 }
 
-const datasets: Dataset[] = [
-  {
-    id: "1",
-    name: "Sales Data 2023",
-    description: "Annual sales performance data",
-    date: "2023-12-01",
-    size: "2.5 MB",
-  },
-  {
-    id: "2",
-    name: "Customer Feedback",
-    description: "Customer survey response",
-    date: "2023-11-15",
-    size: "1.8 MB",
-  },
-];
 export default function ProjectPage() {
   const params = useParams();
   const id = params.id;
+  const [datasets, setDatasets] = useState<Dataset[]>([]);
 
   const handleAddDataset = (
     title: string,
     description: string,
     file: File | null
   ) => {
-    // Handle dataset addition logic here
+    const newDataset: Dataset = {
+      id: (datasets.length + 1).toString(),
+      name: title,
+      description: description,
+      date: new Date().toISOString().split("T")[0],
+      size: file ? `${(file.size / (1024 * 1024)).toFixed(2)} MB` : "0 MB",
+    };
+
+    setDatasets([...datasets, newDataset]);
   };
 
   const handleDeleteDataset = (id: string) => {
-    // Handle dataset deletion logic here
+    setDatasets(datasets.filter((dataset) => dataset.id !== id));
   };
 
   return (
@@ -58,7 +51,6 @@ export default function ProjectPage() {
                 Project Analysis: #{id}
               </h1>
             </div>
-            {/* Cool Image Card */}
             <div className="w-full h-[420px] rounded-lg overflow-hidden shadow-lg">
               <img
                 src="/images/home.png"
@@ -81,10 +73,8 @@ export default function ProjectPage() {
                 onDelete={handleDeleteDataset}
               />
             ))}
-
             <FloatingActionButton onSubmit={handleAddDataset} />
           </div>
-          <div></div>
         </div>
       </SidebarInset>
     </SidebarProvider>
