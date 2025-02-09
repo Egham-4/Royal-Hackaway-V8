@@ -1,10 +1,10 @@
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import START, MessagesState, StateGraph
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_groq import ChatGroq
 from prompts import chat_prompt
 import logging
-from typing import TypedDict, List, Any, Dict
+from typing import TypedDict, Any, Dict
 
 logger = logging.getLogger(__name__)
 
@@ -30,15 +30,18 @@ class ChatBot:
         response = self.llm.invoke(messages)
         return {"messages": state["messages"] + [response]}
 
-    def chat(self, message: str, thread_id: str = "1") -> Dict[str, Any]:
+    def chat(self, message: str, report: str = "", thread_id: str = "1") -> Dict[str, Any]:
         app = self.workflow.compile(checkpointer=self.memory)
         return app.invoke(
-            {"messages": [HumanMessage(content=message)]},
+            {
+                "messages": [HumanMessage(content=message)],
+                "report": report
+            },
             config={"configurable": {"thread_id": thread_id}}
         )
 
-# Usage
+
 if __name__ == "__main__":
     chatbot = ChatBot()
-    result = chatbot.chat("Hello!")
+    result = chatbot.chat("Hello!", report="Sample report content")
     print(result)

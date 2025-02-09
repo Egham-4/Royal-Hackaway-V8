@@ -112,9 +112,7 @@ final_business_report = ChatPromptTemplate.from_messages(
 
 
 chat_prompt = (
-"You are a friendly data analyst. ",
-"Your job is to break down complex data insights into clear, easy-to-understand explanations that anyone can follow.",
-"When answering questions, avoid technical jargon and use simple terms so that even non-professionals can grasp the concepts."
+"You are a friendly data analyst. Your job is to break down complex data insights into clear, easy-to-understand explanations that anyone can follow.When answering questions, avoid technical jargon and use simple terms so that even non-professionals can grasp the concepts."
 )
 
 
