@@ -19,7 +19,18 @@ data_analyser = ChatPromptTemplate.from_messages(
         ),
     ]
 )
-
+summary_prompt=  [ (
+            "system",
+            "You are an expert data analyst and business consultant. Your task is to review a comprehensive data analysis report and generate a concise summary that captures the main findings, trends, and actionable recommendations. "
+            "Your summary should be written in clear, simple language so that non-technical stakeholders can easily understand it. "
+            "Include key performance indicators, observed trends, any anomalies, and suggested next steps."
+            "make sure the size is around 50 to 60 words"
+        ),
+(
+            "human",
+            "Here is the full data analysis report:\n\n{report_text}\n\n"
+            "Please generate a summary that encapsulates the most critical points in a clear, brief, and actionable format."
+        )]
 
 
 visualization_plan = ChatPromptTemplate.from_messages(

@@ -3,9 +3,11 @@ from langgraph.graph import StateGraph, START, END
 from langchain_groq import ChatGroq
 import logging
 from pydantic import BaseModel, Field
+
 from prompts import business_data_analysis, final_business_report, summary_prompt, steps_prompt
 from visualization_types import VisualizationTypes
 from langchain_core.prompts import ChatPromptTemplate
+
 
 logger = logging.getLogger(__name__)
 
@@ -25,8 +27,10 @@ class DataReporterState(TypedDict):
     current_section: int
     total_sections: int
     summary :str
+
     key_insight:str
     steps:SMLSteps
+
 
 class DataReporter:
     def __init__(self):
@@ -46,9 +50,11 @@ class DataReporter:
         graph.add_node("process_section", self.process_section)
         graph.add_node("generate_final_report", self.data_reporter)
         graph.add_node("summary_write",self.summary_write)
+
         graph.add_node("insights",self.insights)
         graph.add_node("gen_steps",self.steps)
-        
+       =======
+
         def should_continue(state: DataReporterState) -> str:
             return "process_section" if state["current_section"] < state["total_sections"] else "generate_final_report"
 
@@ -61,9 +67,15 @@ class DataReporter:
                     "generate_final_report": "generate_final_report"
                 }
             )
+
         graph.add_edge("generate_final_report", "summary_write")
         graph.add_edge("summary_write","gen_steps")
         graph.add_edge("gen_steps",END)
+
+
+        graph.add_edge("generate_final_report", "summary_write")
+        graph.add_edge("summary_write",END)
+
         return graph
 
     def process_section(self, state: DataReporterState) -> DataReporterState:
@@ -83,6 +95,7 @@ class DataReporter:
     
     
     def summary_write(self, state: DataReporterState) -> DataReporterState:
+
 
         prompt = ChatPromptTemplate.from_messages(summary_prompt)
         
@@ -128,7 +141,25 @@ class DataReporter:
             **state,
             "steps": result
         }
+
+        from langchain_core.prompts import ChatPromptTemplate
+
+        prompt = ChatPromptTemplate.from_messages(summary_prompt)
         
+        chain = prompt | self.llm
+        
+        result = chain.invoke({
+            "report_text": state["final_report"],
+        })
+        
+        return {
+            **state,
+            "summary": str(result.content)
+        }
+
+
+    
+
     
     def data_reporter(self, state: DataReporterState) -> DataReporterState:
         logger.info("Generating final report")
@@ -153,11 +184,15 @@ class DataReporter:
             "business_type": business_type,
             "current_section": 0,
             "total_sections": num_sections,
+
             "sub_reports": [],
             "final_report": "",
             "summary": "",
             "key_insight": "",
             "steps": {} 
+
+            "summary":""
+
         }
 
         compiled_graph = self.graph.compile()
@@ -166,6 +201,7 @@ class DataReporter:
         return {
             "sub_reports": result["sub_reports"],
             "final_report": result["final_report"],
+
             "summary":result["summary"],
             "steps":result["steps"]
         }
@@ -209,3 +245,7 @@ if __name__ == "__main__":
     
     print("\nSteps:")
     print(final_output["steps"])
+=======
+            "summary":result["summary"]
+        }
+

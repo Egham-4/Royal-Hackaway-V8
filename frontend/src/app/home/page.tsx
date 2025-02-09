@@ -16,7 +16,14 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { buildApiUrl, fetch_auth, getUser, isAuthenticated, removeToken, User } from "../utils/auth";
+import {
+  buildApiUrl,
+  fetch_auth,
+  getUser,
+  isAuthenticated,
+  removeToken,
+  User,
+} from "../utils/auth";
 import { useRouter } from "next/navigation";
 import { headers } from "next/headers";
 
@@ -27,32 +34,38 @@ interface Project {
 }
 
 export default function HomePage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
-  const [projects, setProjects] = useState<Project[]>([]);
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  // Sample Data
+  const [projects, setProjects] = useState<Project[]>([
+    {
+      id: 1,
+      title: "Sales Analytics Dashboard",
+      description:
+        "Interactive dashboard tracking key sales metrics and performance indicators",
+    },
+  ]);
 
   //const user: User = getUser()
-  let projectUrl = buildApiUrl('/project')
-  let getProjectsUrl = buildApiUrl('/projects')
+  let projectUrl = buildApiUrl("/project");
+  let getProjectsUrl = buildApiUrl("/projects");
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push('/login')
-    }
-    else {
-      const fetchProjects = async () => {
-        let response = await fetch_auth(getProjectsUrl, {
-          method: 'GET'
-        })
-        console.log(response)
-        setProjects(response)
-      }
-      fetchProjects()
-      setLoading(false)
-    }
-  }, [])
-
-
+    //if (!isAuthenticated()) {
+    //  router.push('/login')
+    //}
+    //else {
+    const fetchProjects = async () => {
+      let response = await fetch_auth(getProjectsUrl, {
+        method: "GET",
+      });
+      console.log(response);
+      setProjects(response);
+    };
+    fetchProjects();
+    setLoading(false);
+    //}
+  }, []);
 
   const handleAddProject = async (title: string, description: string) => {
     const newProject = {
@@ -64,16 +77,16 @@ export default function HomePage() {
     let response = await fetch_auth(projectUrl, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(newProject)
-    })
-    console.log(response)
+      body: JSON.stringify(newProject),
+    });
+    console.log(response);
 
     setProjects([...projects, newProject]);
   };
 
-  if (loading) return <h1>Loading</h1>
+  if (loading) return <h1>Loading</h1>;
 
   return (
     <SidebarProvider>

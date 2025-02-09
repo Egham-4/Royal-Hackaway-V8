@@ -7,7 +7,6 @@ from data_preprocessing import preprocessing
 from data_preprocessing import data_profiler
 from ai import data_reporter
 from ai import data_analysist, visualization_types
-import logging
 from ai.visualization_types import PieChartVisualization, LineGraphVisualization, BarChartVisualization, AreaChartVisualization
 import pandas as pd
 
@@ -19,16 +18,26 @@ ALLOWED_EXTENSTIONS = ['csv']
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSTIONS
 
+@bp.route('/getdata/<string:project_id>', methods=['GET'])
+def get_data(project_id=None):
+    datafile = DataFile()
+    results = datafile.get_datasets_by_project_id(project_id)
+    return jsonify(results)
+
+
 @bp.route('/fileupload', methods=['POST'])
 @jwt_required()
 def file_upload():
-    # user_email = get_jwt_identity()
-    user_email = 'hamza@rafi.com'
+    user_email = get_jwt_identity()
 
     if 'file' not in request.files:
         return jsonify({"error": "no file provided"}), 400
 
     file = request.files['file']
+    title = request.form.get('title')
+    description = request.form.get('description')
+    project_id = request.form.get('project_id')
+
 
     # file is empty
     if file.filename == '':
@@ -37,79 +46,119 @@ def file_upload():
     if file and allowed_file(file.filename):
         print("success")
 
-        # Configure logging
-        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+        # Configure #logging
+        #logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
         file_stream = io.StringIO(file.stream.read().decode("utf-8"))
         df = pd.read_csv(file_stream)
 
-        logging.info("Starting data preprocessing...")
+        #logging.info("Starting data preprocessing...")
         clean_csv = preprocessing.adaptive_scaling(df)
 
-        logging.info("Data preprocessing completed.")
+        #logging.info("Data preprocessing completed.")
 
-        logging.info("Extracting data dictionary...")
+        #logging.info("Extracting data dictionary...")
         extracted_data = data_profiler.generate_data_dictionary(clean_csv)
-        logging.info(f"Data extraction completed: {extracted_data.keys()}")
+        #logging.info(f"Data extraction completed: {extracted_data.keys()}")
 
-        logging.info("Initializing DataAnalyzerAgent...")
+        #logging.info("Initializing DataAnalyzerAgent...")
         analysist = data_analysist.DataAnalyzerAgent()
 
-        logging.info("Performing data analysis...")
+        #logging.info("Performing data analysis...")
         analysis = analysist.analyse_data(
             header=extracted_data['header'],
             sample_row=extracted_data['sample_row'],
             metadata=extracted_data['metadata'],
             business_type="hotel"
         )
-        logging.info("Data analysis completed.")
+        #logging.info("Data analysis completed.")
 
         visualisation = analysis['data_visualization']
-        logging.info(f"Extracted {len(visualisation)} visualization objects.")
+
+
+        #logging.info(f"Extracted visualization objects.")
 
         datavis = []
         for v in visualisation:
             if isinstance(v, (LineGraphVisualization, BarChartVisualization, AreaChartVisualization)):
-                logging.info(f"Processing {type(v).__name__} visualization.")
+                #logging.info(f"Processing visualization.")
                 try:
                     revenue_dict = {
                         "Revenue Growth": {str(year): f"${revenue}M" for year, revenue in zip(clean_csv[v['x_axis']], clean_csv[v["y_axis"]])}
                     }
                     datavis.append(revenue_dict)
-                    logging.info(f"Added revenue data: {revenue_dict}")
+                    #logging.info(f"Added revenue data: {revenue_dict}")
                 except KeyError as e:
-                    logging.error(f"KeyError: {e} - Check if '{v['x_axis']}' and '{v['y_axis']}' exist in DataFrame.")
+                    pass
+                    #logging.error(f"KeyError: {e} - Check if '{v['x_axis']}' and '{v['y_axis']}' exist in DataFrame.")
                 except Exception as e:
-                    logging.error(f"Unexpected error processing visualization: {e}")
+                    pass
+                    #logging.error(f"Unexpected error processing visualization: {e}")
 
             elif isinstance(v, PieChartVisualization):
-                logging.info("Processing PieChartVisualization.")
+                #logging.info("Processing PieChartVisualization.")
                 try:
                     piedict = {i: clean_csv[i] for i in v['categories']}
-                    logging.info(f"Pie chart data processed: {piedict}")
+                    datavis.append(piedict)
+                    #logging.info(f"Pie chart data processed: {piedict}")
                 except KeyError as e:
-                    logging.error(f"KeyError: {e} - Check if categories exist in DataFrame.")
+                    pass
+                    #logging.error(f"KeyError: {e} - Check if categories exist in DataFrame.")
                 except Exception as e:
-                    logging.error(f"Unexpected error in pie chart processing: {e}")
+                    pass
+                    #logging.error(f"Unexpected error in pie chart processing: {e}")
 
-        logging.info("Initializing DataReporter...")
+            print(datavis) 
+
+        #logging.info("Initializing DataReporter...")
         reporter = data_reporter.DataReporter()
 
-        logging.info("Generating business performance report...")
+        #logging.info("Generating business performance report...")
+
+        # Ensure `visualisation` is iterable before #logging its length
+        if isinstance(visualisation, list) or isinstance(visualisation, tuple):
+            pass
+            #logging.info(f"Extracted {len(visualisation)} visualization objects.")
+        else:
+            #logging.warning(f"Expected list of visualizations, but got {type(visualisation)}. Wrapping in a list.")
+            visualisation = [visualisation]  # Wrap in a list
+
+        #logging.info(f"Visualization processing will continue with {len(visualisation)} objects.")
+
+
         try:
             result = reporter.write_report(
                 meta_data="2023 Annual Business Performance Analysis",
                 data=datavis,
                 business_type="Technology SaaS Company",
-                num_sections=len(datavis)
+                num_sections=len(list(datavis))
             )
-            yee = zip(result['sub_reports'], visualisation)
-            print(yee)
-            logging.info("Report generation completed successfully.")
+
+    # def store_file(self, project_id, title, description, clean_file, final_report, summary, sub_reports):
+            print(result)
+            print()
+            print(visualisation[0])
+            print(title)
+            print(description)
+            datafile = DataFile()
+            datafile.store_file(
+                project_id,
+                title,
+                description,
+                result['final_report'],
+                result['summary'],
+                result['sub_reports']
+            )
+
+
+
+            #logging.info("Report generation completed successfully.")
         except Exception as e:
-            logging.error(f"Error generating report: {e}")
-        # datafile = DataFile()
-        # datafile.store_file(user_email, file.filename, file)
+            pass
+            #logging.error(f"Error generating report: {e}")
+
+
+
 #         clean_csv = preprocessing.adaptive_scaling(file)
 #         extracted_data = data_profiler.generate_data_dictionary(clean_csv)
 #
