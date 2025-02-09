@@ -1,6 +1,7 @@
 from typing import TypedDict, List, Any, Dict
 from langgraph.graph import StateGraph, START, END
-from langchain_groq import ChatGroq
+from langchain_deepseek import ChatDeepSeek
+import os
 import logging
 from pydantic import BaseModel, Field 
 from prompts import data_analyser, visualization_plan
@@ -25,10 +26,11 @@ class DataAnalyzerState(TypedDict):
 
 class DataAnalyzerAgent:
     def __init__(self):
-        self.llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.1)
-        self.graph = self._build_analyser_graph()
-        self._cache = {}
-        logger.info("DataAnalyzerAgent initialized successfully")
+        self.llm = ChatDeepSeek(
+        model="deepseek-reasoner",
+        temperature=0.1,
+        api_key=os.getenv("DEEPSEEK_API_KEY")  # Fetch API key from environment
+)
 
     def _build_analyser_graph(self) -> StateGraph:
         logger.info("Building DATA ANALYZER graph")

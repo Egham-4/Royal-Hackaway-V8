@@ -1,10 +1,11 @@
 from typing import TypedDict, List, Any, Dict
 from langgraph.graph import StateGraph, START, END
-from langchain_groq import ChatGroq
+from langchain_deepseek import ChatDeepSeek
 import logging
 from pydantic import BaseModel, Field
 from prompts import business_data_analysis, final_business_report
 from visualization_types import VisualizationTypes
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -20,11 +21,12 @@ class DataReporterState(TypedDict):
 
 class DataReporter:
     def __init__(self):
-        self.llm = ChatGroq(
-            model="llama-3.3-70b-versatile",
+        self.llm = ChatDeepSeek(
+            model="deepseek-reasoner",
             temperature=0.1,
-            streaming=True
-        )
+            streaming=True,
+            api_key=os.getenv("DEEPSEEK_API_KEY")  # Retrieve API key from env
+)
         self.graph = self._build_analyser_graph()
         self._cache = {}
         logger.info("DATA REPORTER initialized successfully")

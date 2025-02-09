@@ -43,6 +43,6 @@ def adaptive_scaling(file_path, output_path):
     print("Adaptive scaling complete. File saved at:", output_path)
 
 # Example usage
-input_file = "backend/data_preprocessing/hotel_book.csv"
-output_file = "backend/data_preprocessing/cleaned_hotel_book.csv"
+input_file = "backend/data_preprocessing/sales.csv"
+output_file = "backend/data_preprocessing/ger.csv"
 adaptive_scaling(input_file, output_file)

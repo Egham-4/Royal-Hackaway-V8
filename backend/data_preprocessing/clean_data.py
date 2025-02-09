@@ -16,6 +16,6 @@ def clean_data(file_path, output_path):
     print("Data cleaning complete. File saved at:", output_path)
 
 # Example usage
-input_file = "backend/data_preprocessing/hotel_book.csv"
-output_file = "backend/data_preprocessing/cleaned_hotel_book.csv"
+input_file = "backend/data_preprocessing/dirty_cafe_sales.csv"
+output_file = "backend/data_preprocessing/sales.csv"
 clean_data(input_file, output_file)
