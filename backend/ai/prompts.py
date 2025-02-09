@@ -129,3 +129,42 @@ chat_prompt = (
 )
 
 
+summary_prompt=  [ (
+            "system",
+            "You are an expert data analyst and business consultant. Your task is to review a comprehensive data analysis report and generate a concise summary that captures the main findings, trends, and actionable recommendations. "
+            "Your summary should be written in clear, simple language so that non-technical stakeholders can easily understand it. "
+            "Include key performance indicators, observed trends, any anomalies, and suggested next steps."
+            "make sure the size is around 50 to 60 words"
+        ),
+(
+            "human",
+            "Here is the full data analysis report:\n\n{report_text}\n\n"
+            "Please generate a summary that encapsulates the most critical points in a clear, brief, and actionable format."
+        )]
+
+
+
+insight_prompt = [
+    (
+        "system",
+        "You are an expert data analyst and business consultant. Your task is to review a comprehensive data analysis report and generate a concise summary in bullet points. Each bullet point should capture a key insight (such as main findings, trends, anomalies, and actionable recommendations) in clear, simple language that non-technical stakeholders can understand. Limit the output to around 50-60 words total."
+    ),
+    (
+        "human",
+        "Here is the full data analysis report:\n\n{report_text}\n\nPlease generate a bullet-point summary that encapsulates the most critical insights in a clear, brief, and actionable format."
+    )
+]
+
+
+steps_prompt =  [
+    (
+        "system",
+        "You are an expert business strategist and consultant. Your task is to review a comprehensive data analysis report and generate a concise set of actionable steps in bullet points for the business. "
+        "Organize the steps into three categories: short-term, medium-term, and long-term. Each bullet point should clearly state a recommended action using plain, accessible language for non-technical stakeholders. "
+        "Limit the output to around 50-60 words total."
+    ),
+    (
+        "human",
+        "Here is the full data analysis report:\n\n{report_text}\n\n and an Insight related to this business: \n\n{key_insight}\n\nPlease generate a bullet-point list that outlines actionable steps the business should take in the short, medium, and long term based on the report's insights."
+    )
+]

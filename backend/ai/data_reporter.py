@@ -3,10 +3,19 @@ from langgraph.graph import StateGraph, START, END
 from langchain_groq import ChatGroq
 import logging
 from pydantic import BaseModel, Field
-from ai.prompts import business_data_analysis, final_business_report, summary_prompt
-from ai.visualization_types import VisualizationTypes
+
+from prompts import business_data_analysis, final_business_report, summary_prompt, steps_prompt
+from visualization_types import VisualizationTypes
+from langchain_core.prompts import ChatPromptTemplate
+
 
 logger = logging.getLogger(__name__)
+
+
+class SMLSteps(BaseModel):
+    short: str = Field(description="short steps/strategies..")
+    medium: str = Field(description="medium steps/strategies..")
+    long: str = Field(description="long steps/strategies..")
 
 class DataReporterState(TypedDict):
     meta_data: str
@@ -18,6 +27,10 @@ class DataReporterState(TypedDict):
     current_section: int
     total_sections: int
     summary :str
+
+    key_insight:str
+    steps:SMLSteps
+
 
 class DataReporter:
     def __init__(self):
@@ -37,7 +50,11 @@ class DataReporter:
         graph.add_node("process_section", self.process_section)
         graph.add_node("generate_final_report", self.data_reporter)
         graph.add_node("summary_write",self.summary_write)
-    
+
+        graph.add_node("insights",self.insights)
+        graph.add_node("gen_steps",self.steps)
+       =======
+
         def should_continue(state: DataReporterState) -> str:
             return "process_section" if state["current_section"] < state["total_sections"] else "generate_final_report"
 
@@ -52,7 +69,13 @@ class DataReporter:
             )
 
         graph.add_edge("generate_final_report", "summary_write")
+        graph.add_edge("summary_write","gen_steps")
+        graph.add_edge("gen_steps",END)
+
+
+        graph.add_edge("generate_final_report", "summary_write")
         graph.add_edge("summary_write",END)
+
         return graph
 
     def process_section(self, state: DataReporterState) -> DataReporterState:
@@ -72,6 +95,53 @@ class DataReporter:
     
     
     def summary_write(self, state: DataReporterState) -> DataReporterState:
+
+
+        prompt = ChatPromptTemplate.from_messages(summary_prompt)
+        
+        chain = prompt | self.llm
+        
+        result = chain.invoke({
+            "report_text": state["final_report"],
+        })
+        
+        return {
+            **state,
+            "summary": str(result.content)
+        }
+
+    def insights(self, state: DataReporterState) -> DataReporterState:
+
+        prompt = ChatPromptTemplate.from_messages(summary_prompt)
+        
+        chain = prompt | self.llm
+        
+        result = chain.invoke({
+            "report_text": state["final_report"],
+        })
+        
+        return {
+            **state,
+            "key_insight": str(result.content)
+        }
+    
+    def steps(self, state: DataReporterState) -> DataReporterState:
+
+        prompt = ChatPromptTemplate.from_messages(steps_prompt)
+        structured_llm = self.llm.with_structured_output(SMLSteps)
+
+        chain = prompt | structured_llm
+        
+        result = chain.invoke({
+            "report_text": state["final_report"],
+            "key_insight": state["key_insight"]
+        })
+        
+        return {
+            **state,
+            "steps": result
+        }
+
         from langchain_core.prompts import ChatPromptTemplate
 
         prompt = ChatPromptTemplate.from_messages(summary_prompt)
@@ -89,6 +159,7 @@ class DataReporter:
 
 
     
+
     
     def data_reporter(self, state: DataReporterState) -> DataReporterState:
         logger.info("Generating final report")
@@ -109,14 +180,19 @@ class DataReporter:
         
         initial_state = {
             "meta_data": meta_data,
-            "report": "",
-            "sub_reports": [],
-            "final_report": "",
             "data": data,
             "business_type": business_type,
             "current_section": 0,
             "total_sections": num_sections,
+
+            "sub_reports": [],
+            "final_report": "",
+            "summary": "",
+            "key_insight": "",
+            "steps": {} 
+
             "summary":""
+
         }
 
         compiled_graph = self.graph.compile()
@@ -125,5 +201,51 @@ class DataReporter:
         return {
             "sub_reports": result["sub_reports"],
             "final_report": result["final_report"],
+
+            "summary":result["summary"],
+            "steps":result["steps"]
+        }
+
+
+
+
+# -------------------------
+# Sample Code to Test DataReporter with Sample Data
+# -------------------------
+if __name__ == "__main__":
+    # Sample meta_data as a string
+    sample_meta = "Example Corp, Q1-Q4 2023, Revenue and performance analysis."
+
+    # Sample data: list of 3 sections
+    sample_data = [
+        "Section 1: Revenue increased steadily in Q1 with a 10% growth rate.",
+        "Section 2: Q2 saw a dip in revenue due to external market pressures.",
+        "Section 3: Revenue recovered in Q3 and continued growth into Q4."
+    ]
+
+    sample_business_type = "E-commerce"
+    num_sections = 3
+
+    # Initialize the DataReporter agent
+    reporter = DataReporter()
+    
+    # Generate the report using the sample data
+    final_output = reporter.write_report(sample_meta, sample_data, sample_business_type, num_sections)
+    
+    # Print the results
+    print("Sub Reports:")
+    for sub in final_output["sub_reports"]:
+        print(f"- {sub}")
+    
+    print("\nFinal Report:")
+    print(final_output["final_report"])
+    
+    print("\nSummary:")
+    print(final_output["summary"])
+    
+    print("\nSteps:")
+    print(final_output["steps"])
+=======
             "summary":result["summary"]
         }
+
