@@ -8,8 +8,7 @@ import { ArrowRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { BarChart3, LineChart, PieChart as PieChartIcon } from "lucide-react";
 import { PieChart } from "recharts";
-
-import { ModeToggle } from "@/components/ModeToggle";
+import Chat from "../(components)/Chat";
 
 import {
   LineChart as RechartsLineChart,
@@ -267,6 +266,10 @@ export default function AnalyticsPage({ params }: { params: { id: string } }) {
               </div>
             </div>
           </div>
+
+          {/*ends here*/}
+          <Separator />
+          <Chat />
         </div>
       </SidebarInset>
     </SidebarProvider>
