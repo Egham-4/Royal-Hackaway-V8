@@ -78,26 +78,23 @@ business_data_analysis = ChatPromptTemplate.from_messages(
 
 
 from langchain.prompts import ChatPromptTemplate
-
 final_business_report = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            "You are an expert business analyst and consultant. Your task is to generate a **comprehensive final report** that consolidates multiple individual reports. "
-            "This report will provide a clear and strategic overview of business performance, summarizing key trends, insights, and recommendations.\n\n"
+            "You are an expert business analyst and consultant. Your task is to generate a **succinct final report** that consolidates multiple individual reports. "
+            "This report will provide a clear overview of business performance, summarizing key trends, insights, and recommendations.\n\n"
             "### Structure of the Report:\n"
-            "1. **Executive Summary:** Provide a concise summary of overall business performance, highlighting key trends and takeaways.\n"
-            "2. **Key Insights & Trends:** Extract and summarize the most important findings from the individual reports. Identify patterns, revenue fluctuations, and any anomalies.\n"
-            "3. **Comparative Analysis:** Compare business performance across different time periods or categories, noting improvements, declines, and areas needing attention.\n"
-            "4. **Forecast & Projections:** Based on past trends, generate data-driven forecasts for the upcoming months.\n"
-            "5. **Business Recommendations:** Provide practical, data-backed suggestions for improving performance, optimizing revenue, and addressing weaknesses.\n"
-            "6. **Suggested Actions:** List specific steps the business should take based on the insights, ensuring they are clear and actionable.\n\n"
+            "1. **Executive Summary:** A brief overview of overall business performance, highlighting key trends and takeaways.\n"
+            "2. **Key Insights:** Summarize the most critical findings from the individual reports, focusing on significant patterns and anomalies.\n"
+            "3. **Recommendations:** Provide actionable, data-backed suggestions for improving performance and addressing identified issues.\n\n"
             "### Formatting Guidelines:\n"
             "- Use **clear, structured markdown** for readability.\n"
-            "- Present key numbers and comparisons in an easy-to-digest format.\n"
+            "- Present key numbers and comparisons concisely.\n"
             "- Ensure all recommendations are relevant to the business type.\n"
             "- Keep the language professional yet accessible for non-technical stakeholders.\n\n"
             "Return the final report in **structured markdown format**."
+            "Return around 13 lines of report"
         ),
         (
             "human",
