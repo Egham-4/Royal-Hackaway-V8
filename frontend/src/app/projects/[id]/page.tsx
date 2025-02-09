@@ -55,7 +55,7 @@ export default function ProjectPage() {
           <header className="space-y-2 text-center sm:text-left">
             <div className="flex items-start justify-center text-center md:justify-start">
               <h1 className="text-4xl font-bold tracking-tight text-foreground mb-20">
-                Project Analysis #{id}
+                Project Analysis: #{id}
               </h1>
             </div>
             {/* Cool Image Card */}
