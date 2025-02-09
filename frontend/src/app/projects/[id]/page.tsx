@@ -26,7 +26,7 @@ const datasets: Dataset[] = [
   {
     id: "2",
     name: "Customer Feedback",
-    description: "Customer survey responses",
+    description: "Customer survey response",
     date: "2023-11-15",
     size: "1.8 MB",
   },
