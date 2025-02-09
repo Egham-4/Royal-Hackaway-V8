@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
-    cors = CORS(app)
+    # cors = CORS(app, resources={r"/auth/*": {"origins": "http://localhost:3000"}})
 
     app.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -18,6 +18,8 @@ def create_app():
 
     from . import auth
     app.register_blueprint(auth.bp)
+
+    CORS(app)
     
     return app
 

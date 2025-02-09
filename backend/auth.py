@@ -6,7 +6,7 @@ from backend.models.User import User
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@bp.route('/register', methods=['POST'])
+@bp.route('/register', methods=['POST','OPTIONS'])
 @cross_origin()
 def register():
     content = request.get_json()
@@ -51,3 +51,10 @@ def test():
 
 
 
+@bp.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
