@@ -1,0 +1,7 @@
+bcrypt
+flask
+flask-cors
+flask-jwt-extended
+pandas
+pymongo
+
