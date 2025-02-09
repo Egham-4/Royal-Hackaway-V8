@@ -30,17 +30,13 @@ export function AddDatasetDialog({
 
   // Function to handle when submit is clicked.
   const handleSubmit = async () => {
-    //onDatasetAdd(title, description, file);
-    //setTitle("");
-    //setDescription("");
-    //setFile(null);
+    onDatasetAdd(title, description, file);
 
     const formData = new FormData();
     formData.append("file", file)
     let fileUploadUrl = process.env.API_URL + '/fileupload'
     console.log(fileUploadUrl)
 
-    //try {
     const response = await fetch(fileUploadUrl, {
       method: "POST",
       body: formData
@@ -49,12 +45,9 @@ export function AddDatasetDialog({
     const data = await response.json()
     console.log(data)
 
-    if (response.ok) {
-      setUploadStatus(data)
-    }
-    //catch (error) {
-    //  console.log('error')
-    //}
+    setTitle("");
+    setDescription("");
+    setFile(null);
   };
 
   return (
