@@ -9,6 +9,8 @@ import { Separator } from "@/components/ui/separator";
 import { BarChart3, LineChart, PieChart as PieChartIcon } from "lucide-react";
 import { PieChart } from "recharts";
 
+import { ModeToggle } from "@/components/ModeToggle";
+
 import {
   LineChart as RechartsLineChart,
   Line,
@@ -70,9 +72,15 @@ export default function AnalyticsPage({ params }: { params: { id: string } }) {
           <div className="bg-card rounded-lg p-6">
             <h3 className="text-xl font-semibold mb-4">Detailed Records</h3>
             {/* Add your data table component here */}
-            <Button className="flex-1" variant="outline">
-              View Uploaded Dataset
-            </Button>
+
+            <div className="flex items-center gap-4">
+              <Button className="flex-1" variant="outline">
+                View Uploaded Dataset
+              </Button>
+              <Button className="flex-1" variant="outline">
+                Predict Dataset
+              </Button>
+            </div>
           </div>
           {/* AI Analysis Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
