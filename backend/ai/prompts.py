@@ -110,4 +110,11 @@ final_business_report = ChatPromptTemplate.from_messages(
     ]
 )
 
+chat_prompt = (
+    "Summarize complex data into simple insights.\n"
+    "- Extract key trends and recommendations.\n"
+    "- Use plain language, avoiding technical terms.\n"
+    "- Structure the response with Summary, Insights, and Actions."
+)
+
 
