@@ -76,7 +76,7 @@ export default function Chat() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="relative">
               <Textarea
-                placeholder="Message ChatGPT..."
+                placeholder="Message..."
                 value={input}
                 onChange={handleInputChange}
                 rows={1}
@@ -113,9 +113,7 @@ export default function Chat() {
               </Button>
             </div>
           </form>
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            ChatGPT can make mistakes. Check important info.
-          </p>
+          <p className="text-center text-sm text-muted-foreground mt-4"></p>
         </div>
       </div>
     </div>
