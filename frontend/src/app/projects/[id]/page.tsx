@@ -17,7 +17,7 @@ interface Dataset {
 
 export default function ProjectPage() {
   const params = useParams();
-  const id = params.id;
+
   const [datasets, setDatasets] = useState<Dataset[]>([]);
 
   const handleAddDataset = (
@@ -48,7 +48,7 @@ export default function ProjectPage() {
           <header className="space-y-2 text-center sm:text-left">
             <div className="flex items-start justify-center text-center md:justify-start">
               <h1 className="text-4xl font-bold tracking-tight text-foreground mb-20">
-                Project Analysis: #{id}
+                Project Analysis
               </h1>
             </div>
             <div className="w-full h-[420px] rounded-lg overflow-hidden shadow-lg">

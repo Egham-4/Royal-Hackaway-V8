@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 
 // Declare prop types
 interface ProjectCardProps {
-  id: number;
+  id: string;
   title: string;
   description: string;
 }
