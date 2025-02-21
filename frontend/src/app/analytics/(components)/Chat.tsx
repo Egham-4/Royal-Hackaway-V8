@@ -45,7 +45,7 @@ export default function Chat() {
         <div className="max-w-2xl mx-auto pt-4 space-y-4">
           {messages.length === 0 ? (
             <div className="text-center">
-              <h1 className="text-4xl font-bold mb-8">What can I help with?</h1>
+              <h1 className="text-4xl font-bold mb-8">Ask Me Anything...</h1>
             </div>
           ) : (
             messages.map((message) => (
