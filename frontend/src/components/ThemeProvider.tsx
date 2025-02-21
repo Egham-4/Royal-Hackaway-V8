@@ -16,7 +16,7 @@ export function ThemeProvider({
   }, []); // empty array to only render once on mount.
 
   if (!mounted) {
-    return <>{children}</>;
+    return <div className="bg-background text-foreground w-screen h-screen" />;
   }
 
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;

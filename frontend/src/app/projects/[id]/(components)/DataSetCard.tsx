@@ -1,7 +1,9 @@
+"use client"; // Add this at the top
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface DatasetCardProps {
   dataset: {
@@ -15,6 +17,8 @@ interface DatasetCardProps {
 }
 
 export function DatasetCard({ dataset, onDelete }: DatasetCardProps) {
+  const router = useRouter();
+
   return (
     <Card className="p-4">
       <div className="flex justify-between items-start mb-2">
@@ -34,9 +38,9 @@ export function DatasetCard({ dataset, onDelete }: DatasetCardProps) {
         <span>{dataset.date}</span>
         <span>{dataset.size}</span>
       </div>
-      <Link href={`/analytics/${dataset.id}`} className="w-full mt-4 block">
-        <Button className="w-full">Analyze</Button>
-      </Link>
+      <Button onClick={() => router.push(`/analytics/${dataset.id}`)}>
+        Analyse
+      </Button>
     </Card>
   );
 }
