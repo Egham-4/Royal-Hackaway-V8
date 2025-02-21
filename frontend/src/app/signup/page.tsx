@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 export default function SignUp() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [display_name, setDisplayName] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -26,6 +27,9 @@ export default function SignUp() {
       const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: { display_name: display_name },
+        },
       });
 
       if (error) {
@@ -50,8 +54,19 @@ export default function SignUp() {
               Enter your details below to create your account
             </p>
           </div>
+
           <div className="space-y-6 m-2">
             <form onSubmit={handleSignUp}>
+              <div className="space-y-2">
+                <Label htmlFor="email">Username</Label>
+                <Input
+                  type="display_name"
+                  placeholder="Username"
+                  value={display_name}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  required
+                />
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input

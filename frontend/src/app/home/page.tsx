@@ -7,7 +7,7 @@ import { AddProjectCard } from "./(components)/AddProjectCard";
 
 /* Sidebar imports */
 import { AppSidebar } from "@/components/app-sidebar";
-
+import { supabase } from "@/lib/supabase";
 import {
   SidebarInset,
   SidebarProvider,
@@ -34,6 +34,9 @@ export default function HomePage() {
         "Interactive dashboard tracking key sales metrics and performance indicators",
     },
   ]);
+
+  console.log(supabase.auth.getUser());
+  console.log("hello");
 
   const handleAddProject = async (title: string, description: string) => {
     const newProject = {
