@@ -1,138 +1,104 @@
-"use client";
+"use client"; // Mark this as a Client Component
 
 import { useState } from "react";
-import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Icons } from "@/components/icons";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { buildApiUrl, saveToken, saveUser } from "../utils/auth";
+import { Button } from "@/components/ui/button";
 
-export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-
+export default function Login() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
-    setIsLoading(true);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true); // Start loading
+    setError("");
 
-    let formData = {
-      email: loginform.email.value,
-      password: loginform.password.value
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setError(error.message);
+      } else {
+        router.push("/home"); // Redirect to dashboard after login
+      }
+    } catch (err) {
+      setError("An unexpected error occurred.");
+    } finally {
+      setIsLoading(false); // Stop loading
     }
-    let loginUrl = buildApiUrl('/auth/login')
-
-    let response = await fetch(loginUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(formData)
-
-    })
-
-    let json = await response.json()
-    console.log(json)
-
-    if (response.status == 200) {
-      saveToken(json.access_token)
-      saveUser(json.user)
-      router.push("/home");
-    }
-
-    if (response.status == 401) {
-      setError(json.error)
-      loginform.reset()
-    }
-
-    // stop loading
-    setIsLoading(false)
-  }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="relative mx-auto w-full max-w-[400px] space-y-8 p-8 border rounded-lg shadow-sm">
-        <div className="flex flex-col space-y-3 text-center">
-          <h1 className="text-3xl font-bold">Welcome back</h1>
-          <p className="text-sm text-muted-foreground">
-            Enter your credentials to access your account
-          </p>
-        </div>
-
-        <form name="loginform" onSubmit={onSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              placeholder="name@example.com"
-              type="email"
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect="off"
-              disabled={isLoading}
-              name="email"
-            />
+    <div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="relative mx-auto w-full max-w-[600px] space-y-8 p-8 border rounded-lg shadow-sm">
+          <div className="flex flex-col space-y-3 text-center">
+            <h1 className="text-3xl font-bold">Log in to your account</h1>
+            <p className="text-sm text-muted-foreground">
+              Enter your details below to log in
+            </p>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              placeholder="Enter your password"
-              type="password"
-              disabled={isLoading}
-              name="password"
-            />
-          </div>
+          <div className="space-y-6 m-2">
+            <form onSubmit={handleLogin}>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2 mt-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                className="w-full mt-2"
+                disabled={isLoading}
+              >
+                {isLoading && (
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Log In
+              </Button>
+            </form>
 
-          {
-            error ?
+            {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
-              </Alert> : null
-          }
-
-
-
-          <Button className="w-full" disabled={isLoading}>
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              </Alert>
             )}
-            Sign In
-          </Button>
-        </form>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
-              Or continue with
-            </span>
+            <p className="text-sm text-muted-foreground text-center">
+              Don't have an account?{" "}
+              <a href="/signup" className="text-primary hover:underline">
+                Sign up
+              </a>
+            </p>
           </div>
         </div>
-
-        <Button variant="outline" className="w-full" disabled={isLoading}>
-          <Icons.google className="mr-2 h-4 w-4" />
-          Google
-        </Button>
-
-        <p className="text-center text-sm text-muted-foreground">
-          Don't have an account?{" "}
-          <Link
-            href="/signup"
-            className="font-medium text-primary hover:underline"
-          >
-            Sign up
-          </Link>
-        </p>
       </div>
     </div>
   );

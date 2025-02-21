@@ -4,28 +4,17 @@ import { useEffect, useState } from "react";
 
 import { ProjectCard } from "./(components)/ProjectCard";
 import { AddProjectCard } from "./(components)/AddProjectCard";
-import { Button } from "@/components/ui/button";
 
 /* Sidebar imports */
 import { AppSidebar } from "@/components/app-sidebar";
-
-import { Separator } from "@/components/ui/separator";
 
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import {
-  buildApiUrl,
-  fetch_auth,
-  getUser,
-  isAuthenticated,
-  removeToken,
-  User,
-} from "../utils/auth";
+
 import { useRouter } from "next/navigation";
-import { headers } from "next/headers";
 
 interface Project {
   id: number;
@@ -35,7 +24,7 @@ interface Project {
 
 export default function HomePage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+
   // Sample Data
   const [projects, setProjects] = useState<Project[]>([
     {
@@ -46,27 +35,6 @@ export default function HomePage() {
     },
   ]);
 
-  //const user: User = getUser()
-  let projectUrl = buildApiUrl("/project");
-  let getProjectsUrl = buildApiUrl("/projects");
-
-  useEffect(() => {
-    //if (!isAuthenticated()) {
-    //  router.push('/login')
-    //}
-    //else {
-    const fetchProjects = async () => {
-      let response = await fetch_auth(getProjectsUrl, {
-        method: "GET",
-      });
-      console.log(response);
-      setProjects(response);
-    };
-    fetchProjects();
-    setLoading(false);
-    //}
-  }, []);
-
   const handleAddProject = async (title: string, description: string) => {
     const newProject = {
       id: Date.now(),
@@ -74,19 +42,8 @@ export default function HomePage() {
       description,
     };
 
-    let response = await fetch_auth(projectUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newProject),
-    });
-    console.log(response);
-
     setProjects([...projects, newProject]);
   };
-
-  if (loading) return <h1>Loading</h1>;
 
   return (
     <SidebarProvider>

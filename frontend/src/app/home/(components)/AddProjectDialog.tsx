@@ -50,9 +50,8 @@ export function AddProjectDialog({
             onChange={(e) => setDescription(e.target.value)}
             required
           />
-          <DialogTrigger>
-            <Button onClick={handleSubmit}>Create Project</Button>
-          </DialogTrigger>
+          {/* Use a regular Button with an onClick handler */}
+          <Button onClick={handleSubmit}>Create Project</Button>
         </div>
       </DialogContent>
     </Dialog>
