@@ -1,5 +1,8 @@
 // __tests__/adaptiveScaling.test.js
+
+// Test file to test adaptiveScaling.js file.
 const parseCsv = require('../utils/adaptiveScaling'); 
+
 
 
 describe('parseCsv function', () => {
@@ -33,4 +36,31 @@ describe('parseCsv function', () => {
       { id: '2', value: '' }
     ]);
   });
+
+  
+  
+});
+
+const Papa = require('papaparse');
+
+function parseCsvWithSkipEmptyLines(csvData) {
+  return Papa.parse(csvData, { header: true, skipEmptyLines: false }).data;
+}
+
+it('should ignore empty lines when skipEmptyLines is true', () => {
+  const csvData = `id,value
+1,100
+2,
+3,200
+
+5,300`;
+
+  const result = parseCsvWithSkipEmptyLines(csvData);
+
+  expect(result).toEqual([
+    { id: '1', value: '100' },
+    { id: '2', value: '' },
+    { id: '3', value: '200' },
+    { id: '5', value: '300' }
+  ]);
 });
