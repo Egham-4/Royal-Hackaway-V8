@@ -31,7 +31,7 @@ interface MetadataField {
   });
   
   const outputAnnotation = Annotation.Root({
-    data_visualization: Annotation<VisualizationType>,
+    data_visualization: Annotation<VisualizationType[]>,
   });
   
 // First node processor
@@ -63,18 +63,11 @@ export async function data_analyser(
   
   export async function data_visual(
     state: typeof inputAnnotation.State & { analysis: ImportantHeadersType }
-  ): Promise<{ data_visualization: VisualizationType }> {
-    console.log('Starting visualization planning...');
-    console.log('Input state:', {
-      analysis: state.analysis,
-      metadata: state.metadata
-    });
+  ): Promise<{ data_visualization: VisualizationType[] }> { // Fix return type
+    console.log("Starting visualization planning...");
+    console.log("Input state:", { analysis: state.analysis, metadata: state.metadata });
   
-    const llm = new ChatGroq({
-      model: "llama-3.3-70b-versatile",
-      temperature: 0.2,
-    });
-  
+    const llm = new ChatGroq({ model: "llama-3.3-70b-versatile", temperature: 0.2 });
     const structllm = llm.withStructuredOutput(VisualizationTypes);
     const chain = data_visualizer_prompt.pipe(structllm);
   
@@ -83,8 +76,8 @@ export async function data_analyser(
       metadata: state.metadata,
     });
   
-    console.log('Visualization planning result:', result);
-    return { data_visualization: { visualization: result.visualization } };
+    console.log("Visualization planning result:", result);
+    return { data_visualization: result as unknown as VisualizationType[] }; // Cast result
   }
   
   // Create and export the state graph
