@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"; // Shadcn components
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   LineChart,
   Line,
@@ -12,30 +12,53 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from "recharts"; // Recharts components
+} from "recharts";
 import { supabase } from "@/lib/supabase";
+
+interface ChartDataPoint {
+  month: string;
+  revenue: number;
+}
+
+interface DataRow {
+  month: string | null;
+  revenue?: number;
+}
+
+interface Dataset {
+  id: string;
+  name: string;
+  description: string;
+  date: string;
+  size: string;
+  data: DataRow[];
+}
 
 export default function AnalyticsPage() {
   const params = useParams();
-  const [chartData, setChartData] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
+  const [rawData, setRawData] = useState<Dataset[]>([]);
 
   useEffect(() => {
     const fetchDataset = async () => {
       const { data, error } = await supabase
-        .from("datasets") // Replace with your table name
+        .from("datasets")
         .select("*")
-        .eq("id", params.id)
-        .single();
+        .eq("id", params.id);
 
       if (error) {
         console.error("Error fetching dataset:", error);
-      } else if (data) {
-        // Transform the data for the chart
-        const transformedData = data.data.map((row: any) => ({
-          // Replace 'date' and 'value' with your actual CSV column names
-          date: row.date, // Assuming 'date' is a column in your CSV
-          value: row.value, // Assuming 'value' is a column in your CSV
-        }));
+        return;
+      }
+
+      if (data) {
+        setRawData(data);
+        const transformedData = data[0].data
+          .filter((row: DataRow) => row.month && row.revenue)
+          .map((row: DataRow) => ({
+            month: row.month as string,
+            revenue: row.revenue as number,
+          }));
 
         setChartData(transformedData);
       }
@@ -51,6 +74,17 @@ export default function AnalyticsPage() {
           <CardTitle>Analytics</CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="mb-4 p-4 bg-gray-100 rounded text-black">
+            <h3 className="font-bold mb-2">Raw Data:</h3>
+            <pre className="whitespace-pre-wrap bg-gray-100 p-4 rounded">
+              {JSON.stringify(rawData, null, 2)}
+            </pre>
+            <h3 className="font-bold mb-2 mt-4">Chart Data:</h3>
+            <pre className="whitespace-pre-wrap">
+              {JSON.stringify(chartData, null, 2)}
+            </pre>
+          </div>
+
           <div className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -63,13 +97,13 @@ export default function AnalyticsPage() {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
                 <Line
                   type="monotone"
-                  dataKey="value"
+                  dataKey="revenue"
                   stroke="#8884d8"
                   activeDot={{ r: 8 }}
                 />

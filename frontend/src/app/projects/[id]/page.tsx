@@ -18,6 +18,10 @@ interface Dataset {
   size: string;
   data?: any; // Add this field to store the parsed CSV data
 }
+// First, add a type for the parsed CSV row
+interface CsvRow {
+  [key: string]: string | number | null;
+}
 
 export default function ProjectPage() {
   const params = useParams();
@@ -26,7 +30,7 @@ export default function ProjectPage() {
   // Function to handle analyse button.
   const handleAnalyse = (id: string) => {
     const dataset = datasets.find((dataset) => dataset.id === id);
-    console.log(dataset);
+    //console.log(dataset);
     if (dataset) {
       // Construct the URL with query parameters
       const queryParams = new URLSearchParams({
@@ -39,6 +43,7 @@ export default function ProjectPage() {
   };
 
   const [datasets, setDatasets] = useState<Dataset[]>([]);
+
   const handleAddDataset = async (
     title: string,
     description: string,
@@ -47,9 +52,18 @@ export default function ProjectPage() {
     if (!file) return;
 
     Papa.parse(file, {
+      // to organize with field name instead of index.
       header: true,
+      // auto typing
       dynamicTyping: true,
+      // parse file instead of string.
       complete: async (results) => {
+        // Extract headers and first row
+        // Type assertion for the first row
+        const firstRow = results.data[0] as CsvRow;
+
+        const headers = Object.keys(firstRow);
+        const sampleRow = Object.values(firstRow);
         const newDataset = {
           name: title,
           description: description,
@@ -57,6 +71,7 @@ export default function ProjectPage() {
           size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
           data: results.data, // Store the parsed CSV data
         };
+
         // Save the dataset to Supabase
         const { data, error } = await supabase
           .from("datasets") // Replace with your table name
@@ -126,6 +141,27 @@ export default function ProjectPage() {
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
               Data Insights
             </h2>
+
+            <div className="mb-8 p-6 bg-gray-100 rounded-lg shadow-md text-black">
+              <h3 className="text-xl font-bold mb-4">Parsed Data Structure</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold mb-2">Headers:</h4>
+                  <pre className="bg-white p-4 rounded">
+                    {datasets[2]?.data &&
+                      JSON.stringify(Object.keys(datasets[2].data[2]), null, 2)}
+                  </pre>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Sample Row:</h4>
+                  <pre className="bg-white p-4 rounded">
+                    {datasets[2]?.data &&
+                      JSON.stringify(datasets[2].data[2], null, 2)}
+                  </pre>
+                </div>
+              </div>
+            </div>
+
             <p className="text-lg text-muted-foreground">
               View and analyze your project metrics
             </p>
