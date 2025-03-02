@@ -3,9 +3,12 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FloatingActionButton } from "./(components)/FloatingActionButton";
 import { DatasetCard } from "./(components)/DataSetCard";
+import * as Papa from "papaparse";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 interface Dataset {
   id: string;
@@ -13,31 +16,93 @@ interface Dataset {
   description: string;
   date: string;
   size: string;
+  data?: any; // Add this field to store the parsed CSV data
 }
 
 export default function ProjectPage() {
   const params = useParams();
+  const router = useRouter();
+
+  // Function to handle analyse button.
+  const handleAnalyse = (id: string) => {
+    const dataset = datasets.find((dataset) => dataset.id === id);
+    console.log(dataset);
+    if (dataset) {
+      // Construct the URL with query parameters
+      const queryParams = new URLSearchParams({
+        data: JSON.stringify(dataset.data),
+      }).toString();
+
+      // Navigate to the analytics page with query parameters
+      router.push(`/analytics/${id}?${queryParams}`);
+    }
+  };
 
   const [datasets, setDatasets] = useState<Dataset[]>([]);
-
-  const handleAddDataset = (
+  const handleAddDataset = async (
     title: string,
     description: string,
     file: File | null
   ) => {
-    const newDataset: Dataset = {
-      id: (datasets.length + 1).toString(),
-      name: title,
-      description: description,
-      date: new Date().toISOString().split("T")[0],
-      size: file ? `${(file.size / (1024 * 1024)).toFixed(2)} MB` : "0 MB",
-    };
+    if (!file) return;
 
-    setDatasets([...datasets, newDataset]);
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      complete: async (results) => {
+        const newDataset = {
+          name: title,
+          description: description,
+          date: new Date().toISOString().split("T")[0],
+          size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
+          data: results.data, // Store the parsed CSV data
+        };
+        // Save the dataset to Supabase
+        const { data, error } = await supabase
+          .from("datasets") // Replace with your table name
+          .insert([newDataset])
+          .select();
+
+        if (error) {
+          console.error("Error saving dataset:", error);
+        } else {
+          // Update the local state with the new dataset
+          setDatasets([...datasets, ...data]);
+        }
+      },
+    });
   };
 
-  const handleDeleteDataset = (id: string) => {
-    setDatasets(datasets.filter((dataset) => dataset.id !== id));
+  // To fetch datasets from "datasets" table in the database(supabase).
+  useEffect(() => {
+    const fetchDatasets = async () => {
+      const { data, error } = await supabase
+        .from("datasets") // Replace with your table name
+        .select("*");
+
+      if (error) {
+        console.error("Error fetching datasets:", error);
+      } else {
+        setDatasets(data);
+      }
+    };
+
+    fetchDatasets();
+  }, []);
+
+  // To delete dataset.
+  const handleDeleteDataset = async (id: string) => {
+    const { error } = await supabase
+      .from("datasets") // Replace with your table name
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error deleting dataset:", error);
+    } else {
+      // Update the local state
+      setDatasets(datasets.filter((dataset) => dataset.id !== id));
+    }
   };
 
   return (
@@ -71,6 +136,7 @@ export default function ProjectPage() {
                 key={dataset.id}
                 dataset={dataset}
                 onDelete={handleDeleteDataset}
+                onAnalyse={handleAnalyse}
               />
             ))}
             <FloatingActionButton onSubmit={handleAddDataset} />
